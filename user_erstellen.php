@@ -44,7 +44,7 @@ try {
 unset($_SESSION['new_user_data']);
 
 // Cookie setzen
-$cookie_data = json_encode(['firstname' => $firstname, 'lastname' => $lastname]);
+$cookie_data = json_encode(['firstname' => $firstname, 'lastname' => $lastname, 'reference' => $reference]);
 setcookie('coffee_user', $cookie_data, time() + (86400 * 30), "/");
 
 // Zurück zur Startseite
