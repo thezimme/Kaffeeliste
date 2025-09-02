@@ -7,10 +7,10 @@ $user_data = null;
 $user_names = [];
 if (isset($_COOKIE['coffee_user'])) {
     $user_names_from_cookie = json_decode($_COOKIE['coffee_user'], true);
-    if ($user_names_from_cookie && isset($user_names_from_cookie['firstname']) && isset($user_names_from_cookie['lastname'])) {
+    if ($user_names_from_cookie && isset($user_names_from_cookie['firstname']) && isset($user_names_from_cookie['lastname']) && isset($user_names_from_cookie['reference'])) {
         $user_names = $user_names_from_cookie;
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE firstname = ? AND lastname = ?");
-        $stmt->execute([$user_names['firstname'], $user_names['lastname']]);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE firstname = ? AND lastname = ? AND oe = ?");
+        $stmt->execute([$user_names['firstname'], $user_names['lastname'], $user_names['reference']]);
         $user_data = $stmt->fetch();
         if ($user_data) {
             $stmt_bookings = $pdo->prepare("SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_time DESC LIMIT 2");
