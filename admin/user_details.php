@@ -39,7 +39,7 @@ $transactions->execute([$user_id]);
 </head>
 <body>
 <main>
-    <div class="card">
+    <div class="card user-header-card">
         <a href="dashboard.php" style="text-decoration: none; align-self: flex-start; margin-bottom: 16px;">
             <md-text-button>
                 <span class="material-symbols-outlined" slot="icon">arrow_back</span>
@@ -49,7 +49,12 @@ $transactions->execute([$user_id]);
         <h1 style="margin-top: 0; text-align: left;">
             <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>
         </h1>
-        <p style="text-align: left; font-size: 1.2em; margin-top: 0;">Aktuelles Guthaben: <strong class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</strong></p>
+        <p style="text-align: left; font-size: 1.2em; margin-top: 0; color: var(--md-sys-color-on-surface-variant);">
+            Aktuelles Guthaben: 
+            <strong class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>">
+                <?= number_format($user['balance'], 2, ',', '.') ?> €
+            </strong>
+        </p>
     </div>
 
     <div class="details-grid">
