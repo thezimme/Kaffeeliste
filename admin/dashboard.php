@@ -35,16 +35,22 @@ $users = $pdo->query("
     
     <style>
         md-outlined-select, md-filled-button { width: 100%; }
-        .user-table { width: 100%; border-collapse: collapse; }
-        .user-table th, .user-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--md-sys-color-surface-variant); }
     </style>
 </head>
 <body>
 <main>
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>📊 Admin Dashboard</h1>
-            <a href="logout.php"><md-outlined-button>Logout</md-outlined-button></a>
+            <h1>
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                Admin Dashboard
+            </h1>
+            <a href="logout.php" style="text-decoration: none;">
+                <md-outlined-button>
+                    <span class="material-symbols-outlined" slot="icon">logout</span>
+                    Logout
+                </md-outlined-button>
+            </a>
         </div>
         <?php
         if (isset($_SESSION['message'])) {
@@ -63,21 +69,31 @@ $users = $pdo->query("
                 <?php endforeach; ?>
             </md-outlined-select>
             <md-outlined-text-field label="Betrag in €" type="number" step="0.01" name="amount" required></md-outlined-text-field>
-            <md-filled-button type="submit">Guthaben buchen</md-filled-button>
+            <md-filled-button type="submit">
+                 <span class="material-symbols-outlined" slot="icon">add_card</span>
+                Guthaben buchen
+            </md-filled-button>
         </form>
     </div>
 
     <div class="card">
         <h2>Nutzerübersicht</h2>
-        <table class="user-table">
-            <thead><tr><th>Name</th><th>Referat</th><th>Guthaben</th><th>Aktionen</th></tr></thead>
+        <table class="data-table">
+            <thead><tr><th>Name</th><th>Referat</th><th>Guthaben</th><th class="actions">Aktionen</th></tr></thead>
             <tbody>
                 <?php foreach ($users as $user): ?>
                 <tr style="cursor:pointer;" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
                     <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
                     <td><?= htmlspecialchars($user['last_reference']) ?></td>
                     <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</td>
-                    <td class="actions"><a href="edit_user.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">✏️</a></td>
+                    <td class="actions">
+                        <md-icon-button href="edit_user.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
+                            <span class="material-symbols-outlined">edit</span>
+                        </md-icon-button>
+                         <md-icon-button href="user_details.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </md-icon-button>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
