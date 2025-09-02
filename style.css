@@ -2,24 +2,33 @@
 @import url("https://unpkg.com/material-web@latest/dist/theme/theme.css");
 
 :root {
-    --md-sys-color-primary: #00695C;
+    --md-sys-color-primary: #6750A4;
     --md-sys-color-on-primary: #FFFFFF;
-    --md-sys-color-primary-container: #9CF1E4;
-    --md-sys-color-on-primary-container: #00201A;
-    --md-sys-color-secondary: #4A635E;
+    --md-sys-color-primary-container: #EADDFF;
+    --md-sys-color-on-primary-container: #21005D;
+    --md-sys-color-secondary: #625B71;
     --md-sys-color-on-secondary: #FFFFFF;
-    --md-sys-color-secondary-container: #CDE8E1;
-    --md-sys-color-on-secondary-container: #05201B;
-    --md-sys-color-error: #BA1A1A;
-    --md-sys-color-error-container: #FFDAD6;
-    --md-sys-color-on-error-container: #410002;
-    --md-sys-color-background: #FAFDFB;
-    --md-sys-color-on-background: #191C1B;
-    --md-sys-color-surface: #FAFDFB;
-    --md-sys-color-on-surface: #191C1B;
-    --md-sys-color-surface-variant: #DAE5E1;
-    --md-sys-color-on-surface-variant: #3F4947;
-    --md-sys-color-outline: #6F7977;
+    --md-sys-color-secondary-container: #E8DEF8;
+    --md-sys-color-on-secondary-container: #1D192B;
+    --md-sys-color-tertiary: #7D5260;
+    --md-sys-color-on-tertiary: #FFFFFF;
+    --md-sys-color-tertiary-container: #FFD8E4;
+    --md-sys-color-on-tertiary-container: #31111D;
+    --md-sys-color-error: #B3261E;
+    --md-sys-color-on-error: #FFFFFF;
+    --md-sys-color-error-container: #F9DEDC;
+    --md-sys-color-on-error-container: #410E0B;
+    --md-sys-color-background: #FFFBFE;
+    --md-sys-color-on-background: #1C1B1F;
+    --md-sys-color-surface: #FFFBFE;
+    --md-sys-color-on-surface: #1C1B1F;
+    --md-sys-color-surface-variant: #E7E0EC;
+    --md-sys-color-on-surface-variant: #49454F;
+    --md-sys-color-outline: #79747E;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-inverse-surface: #313033;
+    --md-sys-color-inverse-on-surface: #F4EFF4;
+    --md-sys-color-inverse-primary: #D0BCFF;
 }
 
 body {
