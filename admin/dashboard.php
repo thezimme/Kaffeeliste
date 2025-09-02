@@ -10,8 +10,17 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-// Alle Nutzer aus der Datenbank laden
-$users = $pdo->query("SELECT id, firstname, lastname, balance FROM users ORDER BY lastname, firstname")->fetchAll();
+// Alle Nutzer aus der Datenbank laden und das letzte Referat ermitteln
+$users = $pdo->query("
+    SELECT 
+        u.id, 
+        u.firstname, 
+        u.lastname, 
+        u.balance,
+        (SELECT reference FROM bookings WHERE user_id = u.id ORDER BY booking_time DESC LIMIT 1) as last_reference
+    FROM users u 
+    ORDER BY u.lastname, u.firstname
+")->fetchAll();
 
 ?>
 <!DOCTYPE html>
@@ -22,7 +31,6 @@ $users = $pdo->query("SELECT id, firstname, lastname, balance FROM users ORDER B
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        /* Zusätzliche Stile für das Dashboard */
         .user-table { width: 100%; border-collapse: collapse; }
         .user-table th, .user-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--surface-variant); }
         .user-table th { font-weight: 500; }
@@ -79,6 +87,7 @@ $users = $pdo->query("SELECT id, firstname, lastname, balance FROM users ORDER B
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Referat</th>
                     <th>Aktuelles Guthaben</th>
                 </tr>
             </thead>
@@ -86,6 +95,7 @@ $users = $pdo->query("SELECT id, firstname, lastname, balance FROM users ORDER B
                 <?php foreach ($users as $user): ?>
                 <tr onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
                     <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
+                    <td><?= htmlspecialchars($user['last_reference']) ?></td>
                     <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>">
                         <?= number_format($user['balance'], 2, ',', '.') ?> €
                     </td>
