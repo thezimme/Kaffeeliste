@@ -5,7 +5,7 @@
 // Es wird dringend empfohlen, diese sensiblen Daten als Umgebungsvariablen
 // zu speichern und nicht direkt im Code zu hinterlegen.
 define('DB_HOST', getenv('DB_HOST') ?: 'db5018540677.hosting-data.io');
-define('DB_NAME', getenv('DB_NAME') ?: 'Kaffee');
+define('DB_NAME', getenv('DB_NAME') ?: 'dbs14718939');
 define('DB_USER', getenv('DB_USER') ?: 'dbu4323536');
 define('DB_PASS', getenv('DB_PASS') ?: 'BSIKaffee25FTL');
 define('DB_CHARSET', 'utf8mb4');
