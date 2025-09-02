@@ -34,11 +34,12 @@ $users = $pdo->query("
         .user-table { width: 100%; border-collapse: collapse; }
         .user-table th, .user-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--surface-variant); }
         .user-table th { font-weight: 500; }
-        .user-table tbody tr { cursor: pointer; transition: background-color 0.2s; }
-        .user-table tbody tr:hover { background-color: var(--surface-variant); }
+        .user-table .user-row { cursor: pointer; transition: background-color 0.2s; }
+        .user-table .user-row:hover { background-color: var(--surface-variant); }
         .balance.negative { color: #B3261E; font-weight: bold; }
         .logout-btn { background-color: var(--on-surface-variant); margin-top: 10px; }
         .logout-btn:hover { background-color: var(--on-surface); }
+        .actions a { text-decoration: none; }
     </style>
 </head>
 <body>
@@ -60,44 +61,26 @@ $users = $pdo->query("
     </div>
 
     <div class="card">
-        <h2>Guthaben aufladen</h2>
-        <form action="guthaben_buchen.php" method="POST">
-            <div class="form-group">
-                <label for="user_id">Nutzer auswählen</label>
-                <select name="user_id" id="user_id" class="input-field" required>
-                    <option value="">Bitte wählen...</option>
-                    <?php foreach ($users as $user): ?>
-                        <option value="<?= $user['id'] ?>">
-                            <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="amount">Betrag in €</label>
-                <input type="number" step="0.01" name="amount" id="amount" class="input-field" required placeholder="z.B. 10.00">
-            </div>
-            <button type="submit" class="button">Guthaben buchen</button>
-        </form>
-    </div>
-
-    <div class="card">
         <h2>Nutzerübersicht</h2>
         <table class="user-table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Referat</th>
-                    <th>Aktuelles Guthaben</th>
+                    <th>Guthaben</th>
+                    <th>Aktionen</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($users as $user): ?>
-                <tr onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
-                    <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
-                    <td><?= htmlspecialchars($user['last_reference']) ?></td>
-                    <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>">
+                <tr>
+                    <td class="user-row" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'"><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
+                    <td class="user-row" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'"><?= htmlspecialchars($user['last_reference']) ?></td>
+                    <td class="user-row balance <?= $user['balance'] < 0 ? 'negative' : '' ?>" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
                         <?= number_format($user['balance'], 2, ',', '.') ?> €
+                    </td>
+                    <td class="actions">
+                        <a href="edit_user.php?id=<?= $user['id'] ?>" title="Nutzer bearbeiten">✏️</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
