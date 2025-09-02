@@ -1,10 +1,10 @@
 <?php
-// index.php Neu
+// index.php Final
 require_once 'config.php';
 session_start();
 
 $user_data = null;
-$user_names = []; 
+$user_names = [];
 if (isset($_COOKIE['coffee_user'])) {
     $user_names_from_cookie = json_decode($_COOKIE['coffee_user'], true);
     if ($user_names_from_cookie && isset($user_names_from_cookie['firstname']) && isset($user_names_from_cookie['lastname'])) {
@@ -29,7 +29,30 @@ if (isset($_COOKIE['coffee_user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaffeeliste</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web/"
+      }
+    }
+    </script>
+
+    <script type="module">
+      import '@material/web/all.js';
+      import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+      document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
+
+    <style>
+        /* Zusätzliche Styles, die nach den Komponenten geladen werden müssen */
+        md-outlined-select, md-filled-button {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 
@@ -120,6 +143,5 @@ if (isset($_COOKIE['coffee_user'])) {
     <?php endif; ?>
 </main>
 
-<script type="module" src="https://unpkg.com/material-web@latest/dist/web.js"></script>
 </body>
 </html>
