@@ -3,24 +3,19 @@
 require_once 'config.php';
 session_start();
 
-// Logik zum Abrufen von Benutzerdaten, falls ein Cookie gesetzt ist
 $user_data = null;
-$user_names = []; // Initialisiere das Array, um Fehler zu vermeiden
+$user_names = []; 
 if (isset($_COOKIE['coffee_user'])) {
     $user_names_from_cookie = json_decode($_COOKIE['coffee_user'], true);
     if ($user_names_from_cookie && isset($user_names_from_cookie['firstname']) && isset($user_names_from_cookie['lastname'])) {
-        $user_names = $user_names_from_cookie; // Weise die Werte zu, wenn sie gültig sind
+        $user_names = $user_names_from_cookie;
         $stmt = $pdo->prepare("SELECT * FROM users WHERE firstname = ? AND lastname = ?");
         $stmt->execute([$user_names['firstname'], $user_names['lastname']]);
         $user_data = $stmt->fetch();
-
         if ($user_data) {
-            // Hole letzte zwei Kaffeebuchungen
             $stmt_bookings = $pdo->prepare("SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_time DESC LIMIT 2");
             $stmt_bookings->execute([$user_data['id']]);
             $user_data['bookings'] = $stmt_bookings->fetchAll();
-
-            // Hole die letzte Guthaben-Aufladung durch den Admin
             $stmt_transaction = $pdo->prepare("SELECT * FROM transactions WHERE user_id = ? AND description = 'Einzahlung durch Admin' ORDER BY transaction_time DESC LIMIT 1");
             $stmt_transaction->execute([$user_data['id']]);
             $user_data['last_deposit'] = $stmt_transaction->fetch();
@@ -36,14 +31,7 @@ if (isset($_COOKIE['coffee_user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaffeeliste</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module">
-        import '@material/web/textfield/outlined-text-field.js';
-        import '@material/web/select/outlined-select.js';
-        import '@material/web/select/select-option.js';
-        import '@material/web/button/filled-button.js';
-        import '@material/web/iconbutton/icon-button.js';
-        import '@material/web/icon/icon.js';
-    </script>
+    <script type="module" src="https://unpkg.com/material-web@latest/dist/web.js"></script>
 </head>
 <body>
 
@@ -52,11 +40,9 @@ if (isset($_COOKIE['coffee_user'])) {
         <h1>☕ Kaffeeliste</h1>
 
         <?php
-        // Zeige Erfolgs- oder Fehlermeldungen an
         if (isset($_SESSION['message'])) {
             echo '<div class="message ' . $_SESSION['message_type'] . '">' . htmlspecialchars($_SESSION['message']) . '</div>';
-            unset($_SESSION['message']);
-            unset($_SESSION['message_type']);
+            unset($_SESSION['message'], $_SESSION['message_type']);
         }
         ?>
 
