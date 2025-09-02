@@ -14,15 +14,8 @@ if (!$user_id) {
     exit;
 }
 
-$stmt = $pdo->prepare("
-    SELECT 
-        u.id, 
-        u.firstname, 
-        u.lastname,
-        (SELECT reference FROM bookings WHERE user_id = u.id ORDER BY booking_time DESC LIMIT 1) as last_reference
-    FROM users u 
-    WHERE u.id = ?
-");
+// Jetzt wird die Standard-OE direkt aus der users-Tabelle geladen
+$stmt = $pdo->prepare("SELECT id, firstname, lastname, oe FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
@@ -67,9 +60,9 @@ if (!$user) {
             
             <md-outlined-text-field label="Vorname" name="firstname" required value="<?= htmlspecialchars($user['firstname']) ?>"></md-outlined-text-field>
             <md-outlined-text-field label="Nachname" name="lastname" required value="<?= htmlspecialchars($user['lastname']) ?>"></md-outlined-text-field>
-            <md-outlined-text-field label="Standard-OE" name="reference" required pattern="[A-Z]\s\d{1,2}" title="Bitte im Format 'B 12' eingeben." value="<?= htmlspecialchars($user['last_reference']) ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Standard-OE" name="reference" required pattern="[A-Z]\s\d{1,2}" title="Bitte im Format 'B 12' eingeben." value="<?= htmlspecialchars($user['oe']) ?>"></md-outlined-text-field>
             <p style="font-size: 0.9em; color: var(--md-sys-color-on-surface-variant); margin: -8px 0 8px 0;">
-                Ändert nur den Standardwert für neue Buchungen und das Cookie.
+                Ändert den Standardwert für den Nutzer und das Cookie.
             </p>
             
             <md-filled-button type="submit">
