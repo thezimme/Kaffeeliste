@@ -1,6 +1,5 @@
 /* style.css */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-@import url("https://unpkg.com/material-web@1.0.0-pre.18/dist/theme/theme.css");
+@import url("https://unpkg.com/material-web@latest/dist/theme/theme.css");
 
 :root {
     --md-sys-color-primary: #00695C;
@@ -11,12 +10,7 @@
     --md-sys-color-on-secondary: #FFFFFF;
     --md-sys-color-secondary-container: #CDE8E1;
     --md-sys-color-on-secondary-container: #05201B;
-    --md-sys-color-tertiary: #46617A;
-    --md-sys-color-on-tertiary: #FFFFFF;
-    --md-sys-color-tertiary-container: #CCE5FF;
-    --md-sys-color-on-tertiary-container: #001E32;
     --md-sys-color-error: #BA1A1A;
-    --md-sys-color-on-error: #FFFFFF;
     --md-sys-color-error-container: #FFDAD6;
     --md-sys-color-on-error-container: #410002;
     --md-sys-color-background: #FAFDFB;
@@ -51,21 +45,15 @@ main {
     border-radius: 12px;
     padding: 24px;
     border: 1px solid var(--md-sys-color-outline);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    font-size: 28px;
-    font-weight: 500;
     color: var(--md-sys-color-primary);
     margin: 0 0 24px 0;
     text-align: center;
 }
 
 h2 {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--md-sys-color-on-surface);
     margin: 0 0 16px 0;
 }
 
@@ -103,6 +91,7 @@ h2 {
     border-radius: 8px;
     text-align: center;
     font-weight: 500;
+    margin-bottom: 16px;
 }
 
 .message.success {
