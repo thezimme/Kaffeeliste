@@ -1,0 +1,44 @@
+/* admin/admin_style.css */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+.transaction-list {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.transaction-list th, .transaction-list td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-variant);
+}
+
+.transaction-list th {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--on-surface-variant);
+}
+
+.transaction-list tr:last-child td {
+    border-bottom: none;
+}
+
+.transaction-list .amount-coffee {
+    color: var(--error);
+    font-weight: 500;
+}
+
+.transaction-list .amount-deposit {
+    color: #388E3C; /* Green for deposits */
+    font-weight: 500;
+}
+
+.actions a {
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: 14px;
+}
