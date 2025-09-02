@@ -26,6 +26,8 @@ $users = $pdo->query("SELECT id, firstname, lastname, balance FROM users ORDER B
         .user-table { width: 100%; border-collapse: collapse; }
         .user-table th, .user-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--surface-variant); }
         .user-table th { font-weight: 500; }
+        .user-table tbody tr { cursor: pointer; transition: background-color 0.2s; }
+        .user-table tbody tr:hover { background-color: var(--surface-variant); }
         .balance.negative { color: #B3261E; font-weight: bold; }
         .logout-btn { background-color: var(--on-surface-variant); margin-top: 10px; }
         .logout-btn:hover { background-color: var(--on-surface); }
@@ -82,7 +84,7 @@ $users = $pdo->query("SELECT id, firstname, lastname, balance FROM users ORDER B
             </thead>
             <tbody>
                 <?php foreach ($users as $user): ?>
-                <tr>
+                <tr onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
                     <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
                     <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>">
                         <?= number_format($user['balance'], 2, ',', '.') ?> €
