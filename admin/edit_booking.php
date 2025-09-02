@@ -36,16 +36,17 @@ if (!$booking) {
 <main>
     <div class="card">
         <h1>Buchung bearbeiten</h1>
-        <form action="update_booking.php" method="POST">
+        <form action="update_booking.php" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
             <input type="hidden" name="booking_id" value="<?= $booking['id'] ?>">
             <input type="hidden" name="user_id" value="<?= $booking['user_id'] ?>">
             <input type="hidden" name="old_quantity" value="<?= $booking['quantity'] ?>">
             
-            <div class="form-group">
-                <label for="quantity">Anzahl Kaffee</label>
-                <input type="number" name="quantity" id="quantity" class="input-field" value="<?= $booking['quantity'] ?>" required>
-            </div>
-            <button type="submit" class="button">Speichern</button>
+            <md-outlined-text-field label="Anzahl Kaffee" type="number" name="quantity" required value="<?= $booking['quantity'] ?>"></md-outlined-text-field>
+            
+            <md-filled-button type="submit">
+                <span class="material-symbols-outlined" slot="icon">save</span>
+                Speichern
+            </md-filled-button>
         </form>
     </div>
 </main>
