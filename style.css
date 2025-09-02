@@ -119,9 +119,21 @@ h2 {
 .activity-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    gap: 16px; /* Behält den allgemeinen Abstand der Spalten bei */
     text-align: left;
 }
+
+.info-item {
+    padding-bottom: 16px; /* Mehr Abstand unter jedem Info-Element */
+    border-bottom: 1px solid var(--surface-variant); /* Trennlinie für bessere Übersichtlichkeit */
+    margin-bottom: 16px; /* Abstand zur nächsten Trennlinie */
+}
+
+.info-item:last-child {
+    border-bottom: none; /* Keine Trennlinie unter dem letzten Element */
+    margin-bottom: 0;
+}
+
 
 .info-item h3 {
     margin: 0 0 4px 0;
@@ -133,6 +145,7 @@ h2 {
 .info-item p {
     margin: 0;
     font-size: 16px;
+    line-height: 1.4; /* Etwas mehr Zeilenabstand für bessere Lesbarkeit */
 }
 
 .info-item small {
