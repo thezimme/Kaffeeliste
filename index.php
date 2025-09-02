@@ -15,10 +15,15 @@ if (isset($_COOKIE['coffee_user'])) {
         $user_data = $stmt->fetch();
 
         if ($user_data) {
-            // Hole letzte zwei Buchungen
+            // Hole letzte zwei Kaffeebuchungen
             $stmt_bookings = $pdo->prepare("SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_time DESC LIMIT 2");
             $stmt_bookings->execute([$user_data['id']]);
             $user_data['bookings'] = $stmt_bookings->fetchAll();
+
+            // Hole die letzte Guthaben-Aufladung durch den Admin
+            $stmt_transaction = $pdo->prepare("SELECT * FROM transactions WHERE user_id = ? AND description = 'Einzahlung durch Admin' ORDER BY transaction_time DESC LIMIT 1");
+            $stmt_transaction->execute([$user_data['id']]);
+            $user_data['last_deposit'] = $stmt_transaction->fetch();
         }
     }
 }
@@ -82,22 +87,17 @@ if (isset($_COOKIE['coffee_user'])) {
         <div class="balance <?= $user_data['balance'] < 0 ? 'negative' : '' ?>">
             <?= number_format($user_data['balance'], 2, ',', '.') ?> €
         </div>
-
-        <div class="info-grid">
-            <div class="info-item">
-                <h3>Gesamtanzahl Kaffee</h3>
-                <?php
-                    $stmt_total = $pdo->prepare("SELECT SUM(quantity) as total FROM bookings WHERE user_id = ?");
-                    $stmt_total->execute([$user_data['id']]);
-                    $total_coffees = $stmt_total->fetchColumn();
-                ?>
-                <p><?= $total_coffees ?: 0 ?></p>
-            </div>
+    </div>
+    
+    <div class="card">
+        <h2>Letzte Aktivitäten</h2>
+        <div class="activity-grid">
             <div class="info-item">
                 <h3>Letzte Buchung</h3>
                 <p>
                     <?php if (isset($user_data['bookings'][0])): ?>
-                        <?= $user_data['bookings'][0]['quantity'] ?> Kaffee am <?= date('d.m.Y H:i', strtotime($user_data['bookings'][0]['booking_time'])) ?>
+                        <strong><?= $user_data['bookings'][0]['quantity'] ?> Kaffee</strong><br>
+                        <small><?= date('d.m.Y H:i', strtotime($user_data['bookings'][0]['booking_time'])) ?></small>
                     <?php else: ?>
                         -
                     <?php endif; ?>
@@ -107,11 +107,32 @@ if (isset($_COOKIE['coffee_user'])) {
                 <h3>Vorletzte Buchung</h3>
                 <p>
                     <?php if (isset($user_data['bookings'][1])): ?>
-                        <?= $user_data['bookings'][1]['quantity'] ?> Kaffee am <?= date('d.m.Y H:i', strtotime($user_data['bookings'][1]['booking_time'])) ?>
+                        <strong><?= $user_data['bookings'][1]['quantity'] ?> Kaffee</strong><br>
+                        <small><?= date('d.m.Y H:i', strtotime($user_data['bookings'][1]['booking_time'])) ?></small>
                     <?php else: ?>
                         -
                     <?php endif; ?>
                 </p>
+            </div>
+            <div class="info-item">
+                <h3>Letzte Einzahlung</h3>
+                <p>
+                    <?php if (isset($user_data['last_deposit'])): ?>
+                        <strong><?= number_format($user_data['last_deposit']['amount'], 2, ',', '.') ?> €</strong><br>
+                        <small><?= date('d.m.Y H:i', strtotime($user_data['last_deposit']['transaction_time'])) ?></small>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </p>
+            </div>
+             <div class="info-item">
+                <h3>Gesamtanzahl Kaffee</h3>
+                <?php
+                    $stmt_total = $pdo->prepare("SELECT SUM(quantity) as total FROM bookings WHERE user_id = ?");
+                    $stmt_total->execute([$user_data['id']]);
+                    $total_coffees = $stmt_total->fetchColumn();
+                ?>
+                <p><strong><?= $total_coffees ?: 0 ?></strong></p>
             </div>
         </div>
     </div>
@@ -119,7 +140,5 @@ if (isset($_COOKIE['coffee_user'])) {
 
 </main>
 
-</body>
-</html>
 </body>
 </html>
