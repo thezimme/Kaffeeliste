@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     // Passwort mit dem Hash vergleichen
-    if (password_verify($password, ADMIN_PASSWORD_HASH)) {
+    if (password_verify($password, ADMIN_PASSWORD)) {
         // Passwort ist korrekt, Session-Variable setzen
         $_SESSION['admin_logged_in'] = true;
         unset($_SESSION['login_error']);
