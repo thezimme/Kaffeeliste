@@ -45,10 +45,6 @@ if (!$booking) {
                 <label for="quantity">Anzahl Kaffee</label>
                 <input type="number" name="quantity" id="quantity" class="input-field" value="<?= $booking['quantity'] ?>" required>
             </div>
-            <div class="form-group">
-                <label for="reference">Referat (nicht änderbar)</label>
-                <input type="text" name="reference" id="reference" class="input-field" value="<?= htmlspecialchars($booking['reference']) ?>" readonly>
-            </div>
             <button type="submit" class="button">Speichern</button>
         </form>
     </div>
