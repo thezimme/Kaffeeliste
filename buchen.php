@@ -15,13 +15,22 @@ $lastname = trim($_POST['lastname'] ?? '');
 $reference = trim($_POST['reference'] ?? '');
 $quantity = (int)($_POST['quantity'] ?? 1);
 
-// Validierung: Namen und Referat dürfen nicht leer sein
-if (empty($firstname) || empty($lastname) || empty($reference)) {
-    $_SESSION['message'] = 'Vor- und Nachname sowie das Referat dürfen nicht leer sein.';
+// Validierung: Namen dürfen nicht leer sein
+if (empty($firstname) || empty($lastname)) {
+    $_SESSION['message'] = 'Vor- und Nachname dürfen nicht leer sein.';
     $_SESSION['message_type'] = 'error';
     header('Location: index.php');
     exit();
 }
+
+// Validierung: OE-Format prüfen (z.B. "V 12")
+if (!preg_match('/^[A-Z]\s\d{1,2}$/', $reference)) {
+    $_SESSION['message'] = 'Die OE muss dem Format "B 12" entsprechen (Großbuchstabe, Leerzeichen, 1-2 Zahlen).';
+    $_SESSION['message_type'] = 'error';
+    header('Location: index.php');
+    exit();
+}
+
 
 // 1. Prüfen, ob der Benutzer existiert
 $stmt = $pdo->prepare("SELECT id FROM users WHERE firstname = ? AND lastname = ?");
@@ -70,7 +79,7 @@ if ($user) {
     exit();
 }
 
-// Cookie für 30 Tage setzen, um den Namen und das Referat zu speichern
+// Cookie für 30 Tage setzen, um den Namen und die OE zu speichern
 $cookie_data = json_encode(['firstname' => $firstname, 'lastname' => $lastname, 'reference' => $reference]);
 setcookie('coffee_user', $cookie_data, time() + (86400 * 30), "/"); // 86400 = 1 Tag
 
