@@ -1,194 +1,116 @@
 /* style.css */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url("https://unpkg.com/material-web@1.0.0-pre.18/dist/theme/theme.css");
 
 :root {
-    --primary-color: #004B76;
-    --on-primary: #FFFFFF;
-    --surface: #FDFBFF;
-    --on-surface: #1B1C1E;
-    --surface-variant: #E0E2EC;
-    --on-surface-variant: #44474F;
-    --outline: #74777F;
-    --shadow: #000000;
-    --error: #B3261E;
+    --md-sys-color-primary: #00695C;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #9CF1E4;
+    --md-sys-color-on-primary-container: #00201A;
+    --md-sys-color-secondary: #4A635E;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #CDE8E1;
+    --md-sys-color-on-secondary-container: #05201B;
+    --md-sys-color-tertiary: #46617A;
+    --md-sys-color-on-tertiary: #FFFFFF;
+    --md-sys-color-tertiary-container: #CCE5FF;
+    --md-sys-color-on-tertiary-container: #001E32;
+    --md-sys-color-error: #BA1A1A;
+    --md-sys-color-on-error: #FFFFFF;
+    --md-sys-color-error-container: #FFDAD6;
+    --md-sys-color-on-error-container: #410002;
+    --md-sys-color-background: #FAFDFB;
+    --md-sys-color-on-background: #191C1B;
+    --md-sys-color-surface: #FAFDFB;
+    --md-sys-color-on-surface: #191C1B;
+    --md-sys-color-surface-variant: #DAE5E1;
+    --md-sys-color-on-surface-variant: #3F4947;
+    --md-sys-color-outline: #6F7977;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: var(--surface);
-    color: var(--on-surface);
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 20px;
+    padding: 16px;
 }
 
 main {
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .card {
-    background-color: var(--on-primary);
+    background-color: var(--md-sys-color-surface);
     border-radius: 12px;
     padding: 24px;
-    margin-bottom: 20px;
-    border: 1px solid var(--surface-variant);
-    box-shadow: 0 1px 3px rgba(var(--shadow), 0.1);
+    border: 1px solid var(--md-sys-color-outline);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
-    font-size: 24px;
+h1 {
+    font-size: 28px;
     font-weight: 500;
-    color: var(--primary-color);
-    margin-top: 0;
+    color: var(--md-sys-color-primary);
+    margin: 0 0 24px 0;
     text-align: center;
 }
 
 h2 {
-    font-size: 20px;
-    margin-bottom: 16px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
+    font-size: 22px;
     font-weight: 500;
-    color: var(--on-surface-variant);
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 16px 0;
 }
 
-.input-field {
-    width: 100%;
-    padding: 16px;
-    border: 1px solid var(--outline);
-    border-radius: 8px;
-    font-size: 16px;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.input-field:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0, 75, 118, 0.3);
-}
-
-.button {
-    width: 100%;
-    padding: 16px;
-    background-color: var(--primary-color);
-    color: var(--on-primary);
-    border: none;
-    border-radius: 24px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    text-transform: uppercase;
-}
-
-.button:hover {
-    background-color: #003350;
-}
-
-.user-info {
-    text-align: center;
-}
-
-.user-info h2 {
-    font-weight: 400;
-    margin-bottom: 8px;
-}
-
-.user-info .balance {
-    font-size: 36px;
+.balance {
+    font-size: 45px;
     font-weight: 700;
-    color: var(--primary-color);
+    text-align: center;
+    color: var(--md-sys-color-primary);
 }
 
 .balance.negative {
-    color: var(--error);
+    color: var(--md-sys-color-error);
 }
 
 .activity-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px; /* Behält den allgemeinen Abstand der Spalten bei */
-    text-align: left;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px;
 }
-
-.info-item {
-    padding-bottom: 16px; /* Mehr Abstand unter jedem Info-Element */
-    border-bottom: 1px solid var(--surface-variant); /* Trennlinie für bessere Übersichtlichkeit */
-    margin-bottom: 16px; /* Abstand zur nächsten Trennlinie */
-}
-
-.info-item:last-child {
-    border-bottom: none; /* Keine Trennlinie unter dem letzten Element */
-    margin-bottom: 0;
-}
-
 
 .info-item h3 {
-    margin: 0 0 4px 0;
     font-size: 14px;
-    color: var(--on-surface-variant);
     font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0 0 4px 0;
 }
 
 .info-item p {
+    font-size: 18px;
     margin: 0;
-    font-size: 16px;
-    line-height: 1.4; /* Etwas mehr Zeilenabstand für bessere Lesbarkeit */
-}
-
-.info-item small {
-    color: var(--on-surface-variant);
 }
 
 .message {
     padding: 16px;
     border-radius: 8px;
-    margin-bottom: 20px;
     text-align: center;
+    font-weight: 500;
 }
 
 .message.success {
-    background-color: #DFF2BF;
-    color: #4F8A10;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
 }
 
 .message.error {
-    background-color: #FFB8B8;
-    color: #D8000C;
-}
-
-.button-small {
-    padding: 8px 12px;
-    font-size: 14px;
-    text-decoration: none;
-    background-color: var(--primary-color);
-    color: var(--on-primary);
-    border-radius: 16px;
-    transition: background-color 0.2s;
-    display: inline-block;
-    margin: 2px;
-}
-
-.button-small:hover {
-    background-color: #003350;
-}
-
-.button-small.danger {
-    background-color: var(--error);
-}
-
-.button-small.danger:hover {
-    background-color: #8C1D18;
+    background-color: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
 }
