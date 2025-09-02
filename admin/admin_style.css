@@ -1,14 +1,9 @@
 /* admin/admin_style.css */
 .details-grid {
     display: grid;
+    /* Layout auf eine einzelne Spalte geändert, die Karten sind nun immer untereinander */
     grid-template-columns: 1fr;
     gap: 24px;
-}
-
-@media (min-width: 800px) {
-    .details-grid {
-        grid-template-columns: 1fr 1fr;
-    }
 }
 
 .data-table {
@@ -30,6 +25,13 @@
 
 .data-table tr:last-child td {
     border-bottom: none;
+}
+
+/* NEUE REGEL: Setzt die Schriftgröße für Guthaben in Tabellen zurück */
+.data-table .balance {
+    font-size: inherit; /* Erbt die Schriftgröße von der Tabellenzeile */
+    font-weight: 500;   /* Bleibt leicht fett zur Hervorhebung */
+    text-align: right;  /* Stellt sicher, dass es rechtsbündig ist */
 }
 
 .data-table .amount-coffee {
