@@ -24,9 +24,14 @@ if (!$user) {
     exit;
 }
 
-// Buchungen des Nutzers abrufen
+// Kaffee-Buchungen des Nutzers abrufen
 $bookings = $pdo->prepare("SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_time DESC");
 $bookings->execute([$user_id]);
+
+// Guthaben-Transaktionen des Nutzers abrufen
+$transactions = $pdo->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY transaction_time DESC");
+$transactions->execute([$user_id]);
+
 ?>
 
 <!DOCTYPE html>
@@ -36,41 +41,73 @@ $bookings->execute([$user_id]);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutzerdetails</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="admin_style.css">
 </head>
 <body>
 
 <main>
     <div class="card">
-        <a href="dashboard.php">&larr; Zurück zum Dashboard</a>
-        <h1>Details für <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></h1>
-        <p style="text-align: center; font-size: 1.2em;">Aktuelles Guthaben: <strong><?= number_format($user['balance'], 2, ',', '.') ?> €</strong></p>
+        <a href="dashboard.php" style="text-decoration: none; color: var(--primary-color);">&larr; Zurück zum Dashboard</a>
+        <h1 style="margin-top: 16px;">Details für <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></h1>
+        <p style="text-align: center; font-size: 1.2em; margin-bottom: 0;">Aktuelles Guthaben: <strong class="<?= $user['balance'] < 0 ? 'balance negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</strong></p>
     </div>
 
-    <div class="card">
-        <h2>Alle Buchungen</h2>
-        <table class="user-table">
-            <thead>
-                <tr>
-                    <th>Datum</th>
-                    <th>Anzahl</th>
-                    <th>Referat</th>
-                    <th>Aktionen</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($bookings as $booking): ?>
-                <tr>
-                    <td><?= date('d.m.Y H:i', strtotime($booking['booking_time'])) ?></td>
-                    <td><?= $booking['quantity'] ?></td>
-                    <td><?= htmlspecialchars($booking['reference']) ?></td>
-                    <td>
-                        <a href="edit_booking.php?id=<?= $booking['id'] ?>" class="button-small">Ändern</a>
-                        <a href="delete_booking.php?id=<?= $booking['id'] ?>" onclick="return confirm('Sicher?')" class="button-small danger">Löschen</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="details-grid">
+        <div class="card">
+            <h2>Kaffee-Buchungen</h2>
+            <table class="transaction-list">
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Anzahl</th>
+                        <th>Referat</th>
+                        <th style="text-align: right;">Betrag</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($bookings as $booking): ?>
+                    <tr>
+                        <td><?= date('d.m.Y H:i', strtotime($booking['booking_time'])) ?></td>
+                        <td><?= $booking['quantity'] ?></td>
+                        <td><?= htmlspecialchars($booking['reference']) ?></td>
+                        <td class="amount-coffee" style="text-align: right;">-<?= number_format($booking['quantity'] * KAFFEE_PREIS, 2, ',', '.') ?> €</td>
+                        <td class="actions">
+                            <a href="edit_booking.php?id=<?= $booking['id'] ?>">✏️</a>
+                            <a href="delete_booking.php?id=<?= $booking['id'] ?>" onclick="return confirm('Sicher?')">🗑️</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Guthaben-Einzahlungen</h2>
+            <table class="transaction-list">
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Beschreibung</th>
+                        <th style="text-align: right;">Betrag</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($transactions as $transaction): ?>
+                    <tr>
+                        <td><?= date('d.m.Y H:i', strtotime($transaction['transaction_time'])) ?></td>
+                        <td><?= htmlspecialchars($transaction['description']) ?></td>
+                        <td class="amount-deposit" style="text-align: right;">+<?= number_format($transaction['amount'], 2, ',', '.') ?> €</td>
+                        <td class="actions">
+                             <a href="edit_transaction.php?id=<?= $transaction['id'] ?>">✏️</a>
+                             <a href="delete_transaction.php?id=<?= $transaction['id'] ?>" onclick="return confirm('Sicher?')">🗑️</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 
