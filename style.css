@@ -10,6 +10,7 @@
     --on-surface-variant: #44474F;
     --outline: #74777F;
     --shadow: #000000;
+    --error: #B3261E;
 }
 
 body {
@@ -107,7 +108,7 @@ h1 {
 }
 
 .balance.negative {
-    color: #B3261E;
+    color: var(--error);
 }
 
 .info-grid {
