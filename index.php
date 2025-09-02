@@ -23,7 +23,6 @@ if (isset($_COOKIE['coffee_user'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -31,7 +30,6 @@ if (isset($_COOKIE['coffee_user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaffeeliste</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="https://unpkg.com/material-web@latest/dist/web.js"></script>
 </head>
 <body>
 
@@ -120,8 +118,8 @@ if (isset($_COOKIE['coffee_user'])) {
         </div>
     </div>
     <?php endif; ?>
-
 </main>
 
+<script type="module" src="https://unpkg.com/material-web@latest/dist/web.js"></script>
 </body>
 </html>
