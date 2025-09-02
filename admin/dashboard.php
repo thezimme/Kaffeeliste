@@ -7,10 +7,10 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     header('Location: index.php');
     exit;
 }
+// KORRIGIERTE ABFRAGE: Lädt die OE direkt aus der users-Tabelle.
 $users = $pdo->query("
-    SELECT u.id, u.firstname, u.lastname, u.balance,
-    (SELECT reference FROM bookings WHERE user_id = u.id ORDER BY booking_time DESC LIMIT 1) as last_reference
-    FROM users u ORDER BY u.lastname, u.firstname
+    SELECT id, firstname, lastname, balance, oe
+    FROM users ORDER BY lastname, firstname
 ")->fetchAll();
 
 // Statistiken
@@ -169,7 +169,7 @@ $data = array_values($date_template);
                     <?php foreach ($users as $user): ?>
                     <tr style="cursor:pointer;" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
                         <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
-                        <td><?= htmlspecialchars($user['last_reference']) ?></td>
+                        <td><?= htmlspecialchars($user['oe']) ?></td>
                         <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</td>
                         <td class="actions">
                             <a href="edit_user.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
