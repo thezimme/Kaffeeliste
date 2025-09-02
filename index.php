@@ -59,8 +59,9 @@ if (isset($_COOKIE['coffee_user'])) {
                        value="<?= htmlspecialchars($user_names['lastname'] ?? '') ?>">
             </div>
             <div class="form-group">
-                <label for="reference">Referat / Abteilung (optional)</label>
-                <input type="text" id="reference" name="reference" class="input-field">
+                <label for="reference">Referat / Abteilung</label>
+                <input type="text" id="reference" name="reference" class="input-field" required
+                       value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>">
             </div>
             <div class="form-group">
                 <label for="quantity">Anzahl Kaffee</label>
@@ -118,5 +119,7 @@ if (isset($_COOKIE['coffee_user'])) {
 
 </main>
 
+</body>
+</html>
 </body>
 </html>
