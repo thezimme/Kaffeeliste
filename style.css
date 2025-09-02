@@ -168,3 +168,27 @@ h2 {
     background-color: #FFB8B8;
     color: #D8000C;
 }
+
+.button-small {
+    padding: 8px 12px;
+    font-size: 14px;
+    text-decoration: none;
+    background-color: var(--primary-color);
+    color: var(--on-primary);
+    border-radius: 16px;
+    transition: background-color 0.2s;
+    display: inline-block;
+    margin: 2px;
+}
+
+.button-small:hover {
+    background-color: #003350;
+}
+
+.button-small.danger {
+    background-color: var(--error);
+}
+
+.button-small.danger:hover {
+    background-color: #8C1D18;
+}
