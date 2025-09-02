@@ -1,5 +1,5 @@
 <?php
-// index.php
+// index.php Neu
 require_once 'config.php';
 session_start();
 
