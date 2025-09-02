@@ -36,7 +36,14 @@ if (isset($_COOKIE['coffee_user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaffeeliste</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="https://unpkg.com/material-web@1.0.0-pre.18/dist/web.js"></script>
+    <script type="module">
+        import '@material/web/textfield/outlined-text-field.js';
+        import '@material/web/select/outlined-select.js';
+        import '@material/web/select/select-option.js';
+        import '@material/web/button/filled-button.js';
+        import '@material/web/iconbutton/icon-button.js';
+        import '@material/web/icon/icon.js';
+    </script>
 </head>
 <body>
 
@@ -60,9 +67,9 @@ if (isset($_COOKIE['coffee_user'])) {
 
             <md-outlined-select label="Anzahl Kaffee" name="quantity">
                 <?php for ($i = 1; $i <= 10; $i++): ?>
-                    <md-menu-item value="<?= $i ?>">
+                    <md-select-option value="<?= $i ?>" <?= ($i == 1) ? 'selected' : '' ?>>
                         <div slot="headline"><?= $i ?></div>
-                    </md-menu-item>
+                    </md-select-option>
                 <?php endfor; ?>
             </md-outlined-select>
 
