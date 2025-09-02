@@ -12,6 +12,36 @@ $users = $pdo->query("
     (SELECT reference FROM bookings WHERE user_id = u.id ORDER BY booking_time DESC LIMIT 1) as last_reference
     FROM users u ORDER BY u.lastname, u.firstname
 ")->fetchAll();
+
+// Statistiken
+$stats_today = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE DATE(booking_time) = CURDATE()")->fetchColumn();
+$stats_month = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE MONTH(booking_time) = MONTH(CURDATE()) AND YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
+$stats_year = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
+
+// Daten für die Grafik
+$chart_data_query = $pdo->query("
+    SELECT DATE_FORMAT(booking_time, '%Y-%m-%d') as date, SUM(quantity) as total
+    FROM bookings
+    WHERE booking_time >= CURDATE() - INTERVAL 6 DAY
+    GROUP BY DATE_FORMAT(booking_time, '%Y-%m-%d')
+    ORDER BY date ASC
+");
+$chart_data = $chart_data_query->fetchAll(PDO::FETCH_ASSOC);
+
+$labels = [];
+$data = [];
+$date_template = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $labels[] = date('d.m.', strtotime($date));
+    $date_template[$date] = 0;
+}
+
+foreach ($chart_data as $row) {
+    $date_template[$row['date']] = (int)$row['total'];
+}
+$data = array_values($date_template);
+
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -24,6 +54,7 @@ $users = $pdo->query("
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="admin_style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
 
     <script type="importmap">
     { "imports": { "@material/web/": "https://esm.run/@material/web/" } }
@@ -33,9 +64,32 @@ $users = $pdo->query("
       import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
       document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         md-outlined-select, md-filled-button { width: 100%; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            text-align: center;
+        }
+        .stat-item {
+            background-color: var(--md-sys-color-surface-variant);
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .stat-item h3 {
+            margin: 0 0 8px 0;
+            font-size: 1em;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        .stat-item p {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--md-sys-color-primary);
+        }
     </style>
 </head>
 <body>
@@ -46,12 +100,20 @@ $users = $pdo->query("
                 <span class="material-symbols-outlined">admin_panel_settings</span>
                 Dashboard
             </h1>
-            <a href="logout.php" style="text-decoration: none;">
-                <md-outlined-button>
-                    <span class="material-symbols-outlined" slot="icon">logout</span>
-                    Logout
-                </md-outlined-button>
-            </a>
+            <div>
+                <a href="export.php" style="text-decoration: none;">
+                    <md-outlined-button>
+                        <span class="material-symbols-outlined" slot="icon">download</span>
+                        Export
+                    </md-outlined-button>
+                </a>
+                <a href="logout.php" style="text-decoration: none;">
+                    <md-outlined-button>
+                        <span class="material-symbols-outlined" slot="icon">logout</span>
+                        Logout
+                    </md-outlined-button>
+                </a>
+            </div>
         </div>
         <?php
         if (isset($_SESSION['message'])) {
@@ -59,6 +121,27 @@ $users = $pdo->query("
             unset($_SESSION['message'], $_SESSION['message_type']);
         }
         ?>
+    </div>
+
+    <div class="card">
+        <h2>Statistiken</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>Heute</h3>
+                <p><?= $stats_today ?: 0 ?></p>
+            </div>
+            <div class="stat-item">
+                <h3>Dieser Monat</h3>
+                <p><?= $stats_month ?: 0 ?></p>
+            </div>
+            <div class="stat-item">
+                <h3>Dieses Jahr</h3>
+                <p><?= $stats_year ?: 0 ?></p>
+            </div>
+        </div>
+        <div style="margin-top: 24px;">
+            <canvas id="coffeeChart"></canvas>
+        </div>
     </div>
 
     <div class="card">
@@ -107,5 +190,36 @@ $users = $pdo->query("
         </div>
     </div>
 </main>
+<script>
+    const ctx = document.getElementById('coffeeChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <?= json_encode($labels) ?>,
+            datasets: [{
+                label: 'Kaffee pro Tag',
+                data: <?= json_encode($data) ?>,
+                backgroundColor: 'rgba(0, 99, 156, 0.2)',
+                borderColor: 'rgba(0, 99, 156, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>
