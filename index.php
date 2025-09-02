@@ -97,7 +97,7 @@ if (isset($_COOKIE['coffee_user'])) {
         <form action="buchen.php" method="post" style="display: flex; flex-direction: column; gap: 20px;">
             <md-outlined-text-field label="Vorname" name="firstname" required value="<?= htmlspecialchars($user_names['firstname'] ?? '') ?>"></md-outlined-text-field>
             <md-outlined-text-field label="Nachname" name="lastname" required value="<?= htmlspecialchars($user_names['lastname'] ?? '') ?>"></md-outlined-text-field>
-            <md-outlined-text-field label="Referat / Abteilung" name="reference" required value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="OE" name="reference" required pattern="[A-Z]\s\d{1,2}" title="Bitte im Format 'B 12' eingeben." value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>"></md-outlined-text-field>
 
             <md-outlined-select label="Anzahl Kaffee" name="quantity">
                 <?php for ($i = 1; $i <= 10; $i++): ?>
