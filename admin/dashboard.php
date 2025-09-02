@@ -1,4 +1,3 @@
-
 <?php
 require_once '../config.php';
 session_start();
@@ -9,19 +8,27 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$users = $pdo->query("
-    SELECT id, firstname, lastname, balance, oe
-    FROM users ORDER BY lastname, firstname
-")->fetchAll();
+// Standardwerte für alle Variablen setzen, um Fehler zu vermeiden
+$users = [];
+$stats_today_total = $stats_month = $stats_year = $avg_coffee_per_day = 0;
+$top_drinker_today = $top_drinker_overall = null;
+$chart_data = [];
+$labels = [];
+$data = [];
 
 try {
-    // --- BEREITS VORHANDENE STATISTIKEN ---
+    // Abruf der Benutzerliste
+    $users = $pdo->query("
+        SELECT id, firstname, lastname, balance, oe
+        FROM users ORDER BY lastname, firstname
+    ")->fetchAll();
+
+    // --- STATISTIKEN ---
     $stats_today_total = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE DATE(booking_time) = CURDATE()")->fetchColumn();
     $stats_month = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE MONTH(booking_time) = MONTH(CURDATE()) AND YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
     $stats_year = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
 
-    // --- NEUE STATISTIKEN ---
-    // "Kaffeekönig" des Tages (ROBUSTERE ABFRAGE)
+    // "Kaffeekönig" des Tages
     $top_drinker_today = $pdo->query("
         SELECT u.firstname, u.lastname, SUM(b.quantity) as total_quantity
         FROM bookings b
@@ -32,7 +39,7 @@ try {
         LIMIT 1
     ")->fetch();
 
-    // "Kaffeekönig" insgesamt (ROBUSTERE ABFRAGE)
+    // "Kaffeekönig" insgesamt
     $top_drinker_overall = $pdo->query("
         SELECT u.firstname, u.lastname, SUM(b.quantity) as total_quantity
         FROM bookings b
@@ -43,7 +50,7 @@ try {
     ")->fetch();
 
     // Durchschnittlicher Kaffeeverbrauch pro Tag
-    $avg_coffee_per_day = $pdo->query("
+    $avg_coffee_per_day_query_result = $pdo->query("
         SELECT AVG(daily_total)
         FROM (
             SELECT SUM(quantity) as daily_total
@@ -51,6 +58,11 @@ try {
             GROUP BY DATE(booking_time)
         ) as daily_sums
     ")->fetchColumn();
+    // Sicherstellen, dass das Ergebnis nicht NULL ist
+    if ($avg_coffee_per_day_query_result) {
+        $avg_coffee_per_day = $avg_coffee_per_day_query_result;
+    }
+
 
     // --- DATEN FÜR DIE GRAFIK ---
     $chart_data_query = $pdo->query("
@@ -62,28 +74,25 @@ try {
     ");
     $chart_data = $chart_data_query->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (Exception $e) {
-    // Fallback, falls eine Statistik-Abfrage fehlschlägt, um einen 500-Error zu verhindern
-    $_SESSION['message'] = 'Fehler beim Laden der Statistiken.';
-    $_SESSION['message_type'] = 'error';
-    $stats_today_total = $stats_month = $stats_year = $avg_coffee_per_day = 0;
-    $top_drinker_today = $top_drinker_overall = null;
-    $chart_data = [];
-}
+    // Grafikdaten nur verarbeiten, wenn Daten vorhanden sind
+    if (!empty($chart_data)) {
+        $date_template = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $labels[] = date('d.m.', strtotime($date));
+            $date_template[$date] = 0;
+        }
+        foreach ($chart_data as $row) {
+            $date_template[$row['date']] = (int)$row['total'];
+        }
+        $data = array_values($date_template);
+    }
 
-$labels = [];
-$data = [];
-if (!empty($chart_data)) {
-    $date_template = [];
-    for ($i = 6; $i >= 0; $i--) {
-        $date = date('Y-m-d', strtotime("-$i days"));
-        $labels[] = date('d.m.', strtotime($date));
-        $date_template[$date] = 0;
-    }
-    foreach ($chart_data as $row) {
-        $date_template[$row['date']] = (int)$row['total'];
-    }
-    $data = array_values($date_template);
+} catch (Exception $e) {
+    // Falls irgendeine Datenbankabfrage fehlschlägt, wird eine Fehlermeldung angezeigt,
+    // aber die Seite stürzt nicht mehr komplett ab (weiße Seite).
+    $_SESSION['message'] = 'Ein Datenbankfehler ist aufgetreten: ' . $e->getMessage();
+    $_SESSION['message_type'] = 'error';
 }
 ?>
 <!DOCTYPE html>
@@ -266,35 +275,38 @@ if (!empty($chart_data)) {
     </div>
 </main>
 <script>
-    const ctx = document.getElementById('coffeeChart');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: <?= json_encode($labels) ?>,
-            datasets: [{
-                label: 'Kaffee pro Tag',
-                data: <?= json_encode($data) ?>,
-                backgroundColor: 'rgba(0, 99, 156, 0.2)',
-                borderColor: 'rgba(0, 99, 156, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
+    // Chart nur initialisieren, wenn Daten vorhanden sind
+    if (<?= json_encode(!empty($data)) ?>) {
+        const ctx = document.getElementById('coffeeChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode($labels) ?>,
+                datasets: [{
+                    label: 'Kaffee pro Tag',
+                    data: <?= json_encode($data) ?>,
+                    backgroundColor: 'rgba(0, 99, 156, 0.2)',
+                    borderColor: 'rgba(0, 99, 156, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
             }
-        }
-    });
+        });
+    }
 </script>
 </body>
 </html>
