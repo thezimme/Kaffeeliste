@@ -64,7 +64,7 @@ $chart_data = $chart_data_query->fetchAll(PDO::FETCH_ASSOC);
 $labels = [];
 $data = [];
 $date_template = [];
-for ($i = 6; $i >= 0; $i--) {
+for ($i = 6; i >= 0; $i--) {
     $date = date('Y-m-d', strtotime("-$i days"));
     $labels[] = date('d.m.', strtotime($date));
     $date_template[$date] = 0;
@@ -197,8 +197,7 @@ $data = array_values($date_template);
             <canvas id="coffeeChart"></canvas>
         </div>
         
-        <h3 style="margin-top: 32px;">Statistik-Highlights</h3>
-        <div class="stats-grid">
+        <div class="stats-grid" style="margin-top: 24px;">
             <div class="stat-item">
                 <h3>Kaffeekönig (Heute)</h3>
                 <?php if ($top_drinker_today): ?>
