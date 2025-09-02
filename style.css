@@ -1,34 +1,32 @@
 /* style.css */
 @import url("https://unpkg.com/material-web@latest/dist/theme/theme.css");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet");
 
 :root {
-    --md-sys-color-primary: #6750A4;
+    --md-sys-color-primary: #00639C;
     --md-sys-color-on-primary: #FFFFFF;
-    --md-sys-color-primary-container: #EADDFF;
-    --md-sys-color-on-primary-container: #21005D;
-    --md-sys-color-secondary: #625B71;
+    --md-sys-color-primary-container: #CFE5FF;
+    --md-sys-color-on-primary-container: #001E33;
+    --md-sys-color-secondary: #526070;
     --md-sys-color-on-secondary: #FFFFFF;
-    --md-sys-color-secondary-container: #E8DEF8;
-    --md-sys-color-on-secondary-container: #1D192B;
-    --md-sys-color-tertiary: #7D5260;
+    --md-sys-color-secondary-container: #D5E4F7;
+    --md-sys-color-on-secondary-container: #0E1D2A;
+    --md-sys-color-tertiary: #68587A;
     --md-sys-color-on-tertiary: #FFFFFF;
-    --md-sys-color-tertiary-container: #FFD8E4;
-    --md-sys-color-on-tertiary-container: #31111D;
-    --md-sys-color-error: #B3261E;
+    --md-sys-color-tertiary-container: #EEDBFF;
+    --md-sys-color-on-tertiary-container: #231533;
+    --md-sys-color-error: #BA1A1A;
     --md-sys-color-on-error: #FFFFFF;
-    --md-sys-color-error-container: #F9DEDC;
-    --md-sys-color-on-error-container: #410E0B;
-    --md-sys-color-background: #FFFBFE;
-    --md-sys-color-on-background: #1C1B1F;
-    --md-sys-color-surface: #FFFBFE;
-    --md-sys-color-on-surface: #1C1B1F;
-    --md-sys-color-surface-variant: #E7E0EC;
-    --md-sys-color-on-surface-variant: #49454F;
-    --md-sys-color-outline: #79747E;
+    --md-sys-color-error-container: #FFDAD6;
+    --md-sys-color-on-error-container: #410002;
+    --md-sys-color-background: #F8F9FF;
+    --md-sys-color-on-background: #1A1C1E;
+    --md-sys-color-surface: #F8F9FF;
+    --md-sys-color-on-surface: #1A1C1E;
+    --md-sys-color-surface-variant: #DFE3EB;
+    --md-sys-color-on-surface-variant: #42474E;
+    --md-sys-color-outline: #73777F;
     --md-sys-color-shadow: #000000;
-    --md-sys-color-inverse-surface: #313033;
-    --md-sys-color-inverse-on-surface: #F4EFF4;
-    --md-sys-color-inverse-primary: #D0BCFF;
 }
 
 body {
@@ -38,12 +36,14 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     padding: 16px;
+    min-height: 100vh;
 }
 
 main {
     width: 100%;
-    max-width: 700px;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -54,16 +54,28 @@ main {
     border-radius: 12px;
     padding: 24px;
     border: 1px solid var(--md-sys-color-outline);
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
     color: var(--md-sys-color-primary);
     margin: 0 0 24px 0;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+h1 .material-symbols-outlined {
+    font-size: 2.5rem;
 }
 
 h2 {
     margin: 0 0 16px 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 500;
 }
 
 .balance {
@@ -75,24 +87,6 @@ h2 {
 
 .balance.negative {
     color: var(--md-sys-color-error);
-}
-
-.activity-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 24px;
-}
-
-.info-item h3 {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--md-sys-color-on-surface-variant);
-    margin: 0 0 4px 0;
-}
-
-.info-item p {
-    font-size: 18px;
-    margin: 0;
 }
 
 .message {
@@ -111,4 +105,10 @@ h2 {
 .message.error {
     background-color: var(--md-sys-color-error-container);
     color: var(--md-sys-color-on-error-container);
+}
+
+.fab-container {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
 }
