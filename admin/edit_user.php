@@ -43,25 +43,22 @@ if (!$user) {
 <body>
 <main>
     <div class="card">
-         <a href="dashboard.php" style="text-decoration: none; color: var(--primary-color);">&larr; Zurück zum Dashboard</a>
+         <a href="dashboard.php" style="text-decoration: none; color: var(--primary-color);"><md-text-button>
+        <span class="material-symbols-outlined" slot="icon">arrow_back</span>
+        Zurück zum Dashboard</md-text-button></a>
         <h1 style="margin-top:16px;">Nutzer bearbeiten</h1>
-        <form action="update_user.php" method="POST">
+        <form action="update_user.php" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
             
-            <div class="form-group">
-                <label for="firstname">Vorname</label>
-                <input type="text" name="firstname" id="firstname" class="input-field" value="<?= htmlspecialchars($user['firstname']) ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="lastname">Nachname</label>
-                <input type="text" name="lastname" id="lastname" class="input-field" value="<?= htmlspecialchars($user['lastname']) ?>" required>
-            </div>
-             <div class="form-group">
-                <label for="reference">Standard-Referat</label>
-                <input type="text" name="reference" id="reference" class="input-field" value="<?= htmlspecialchars($user['last_reference']) ?>" required>
-                 <small>Ändert nur den Standardwert für neue Buchungen und das Cookie. Bestehende Buchungen bleiben unberührt.</small>
-            </div>
-            <button type="submit" class="button">Speichern</button>
+            <md-outlined-text-field label="Vorname" name="firstname" required value="<?= htmlspecialchars($user['firstname']) ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Nachname" name="lastname" required value="<?= htmlspecialchars($user['lastname']) ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Standard-Referat" name="reference" required value="<?= htmlspecialchars($user['last_reference']) ?>"></md-outlined-text-field>
+            <small>Ändert nur den Standardwert für neue Buchungen und das Cookie. Bestehende Buchungen bleiben unberührt.</small>
+            
+            <md-filled-button type="submit">
+                <span class="material-symbols-outlined" slot="icon">save</span>
+                Speichern
+            </md-filled-button>
         </form>
     </div>
 </main>
