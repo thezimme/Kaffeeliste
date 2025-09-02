@@ -15,9 +15,9 @@ $lastname = trim($_POST['lastname'] ?? '');
 $reference = trim($_POST['reference'] ?? '');
 $quantity = (int)($_POST['quantity'] ?? 1);
 
-// Validierung: Namen dürfen nicht leer sein
-if (empty($firstname) || empty($lastname)) {
-    $_SESSION['message'] = 'Vor- und Nachname dürfen nicht leer sein.';
+// Validierung: Namen und Referat dürfen nicht leer sein
+if (empty($firstname) || empty($lastname) || empty($reference)) {
+    $_SESSION['message'] = 'Vor- und Nachname sowie das Referat dürfen nicht leer sein.';
     $_SESSION['message_type'] = 'error';
     header('Location: index.php');
     exit();
@@ -70,8 +70,8 @@ if ($user) {
     exit();
 }
 
-// Cookie für 30 Tage setzen, um den Namen zu speichern
-$cookie_data = json_encode(['firstname' => $firstname, 'lastname' => $lastname]);
+// Cookie für 30 Tage setzen, um den Namen und das Referat zu speichern
+$cookie_data = json_encode(['firstname' => $firstname, 'lastname' => $lastname, 'reference' => $reference]);
 setcookie('coffee_user', $cookie_data, time() + (86400 * 30), "/"); // 86400 = 1 Tag
 
 // Zurück zur Startseite leiten
