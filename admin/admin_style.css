@@ -11,40 +11,41 @@
     }
 }
 
-.transaction-list {
+.data-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.transaction-list th, .transaction-list td {
+.data-table th, .data-table td {
     padding: 12px 16px;
     text-align: left;
     border-bottom: 1px solid var(--md-sys-color-surface-variant);
 }
 
-.transaction-list th {
+.data-table th {
     font-weight: 500;
     font-size: 14px;
     color: var(--md-sys-color-on-surface-variant);
 }
 
-.transaction-list tr:last-child td {
+.data-table tr:last-child td {
     border-bottom: none;
 }
 
-.transaction-list .amount-coffee {
+.data-table .amount-coffee {
     color: var(--md-sys-color-error);
     font-weight: 500;
 }
 
-.transaction-list .amount-deposit {
+.data-table .amount-deposit {
     color: var(--md-sys-color-primary);
     font-weight: 500;
 }
 
-.actions a {
-    text-decoration: none;
-    margin-right: 12px;
-    font-size: 18px;
-    color: var(--md-sys-color-secondary);
+.data-table .actions {
+    text-align: right;
+}
+
+.data-table md-icon-button {
+    margin-left: 8px;
 }
