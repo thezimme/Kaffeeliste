@@ -124,6 +124,22 @@ $data = array_values($date_template);
     </div>
 
     <div class="card">
+        <h2>Guthaben aufladen</h2>
+        <form action="guthaben_buchen.php" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+            <md-outlined-select label="Nutzer auswählen" name="user_id" required>
+                <?php foreach ($users as $user): ?>
+                    <md-select-option value="<?= $user['id'] ?>"><div slot="headline"><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></div></md-select-option>
+                <?php endforeach; ?>
+            </md-outlined-select>
+            <md-outlined-text-field label="Betrag in €" type="number" step="0.01" name="amount" required></md-outlined-text-field>
+            <md-filled-button type="submit">
+                 <span class="material-symbols-outlined" slot="icon">add_card</span>
+                Guthaben buchen
+            </md-filled-button>
+        </form>
+    </div>
+
+    <div class="card">
         <h2>Statistiken</h2>
         <div class="stats-grid">
             <div class="stat-item">
@@ -142,22 +158,6 @@ $data = array_values($date_template);
         <div style="margin-top: 24px;">
             <canvas id="coffeeChart"></canvas>
         </div>
-    </div>
-
-    <div class="card">
-        <h2>Guthaben aufladen</h2>
-        <form action="guthaben_buchen.php" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
-            <md-outlined-select label="Nutzer auswählen" name="user_id" required>
-                <?php foreach ($users as $user): ?>
-                    <md-select-option value="<?= $user['id'] ?>"><div slot="headline"><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></div></md-select-option>
-                <?php endforeach; ?>
-            </md-outlined-select>
-            <md-outlined-text-field label="Betrag in €" type="number" step="0.01" name="amount" required></md-outlined-text-field>
-            <md-filled-button type="submit">
-                 <span class="material-symbols-outlined" slot="icon">add_card</span>
-                Guthaben buchen
-            </md-filled-button>
-        </form>
     </div>
 
     <div class="card">
