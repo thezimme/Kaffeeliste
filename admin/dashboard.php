@@ -164,7 +164,7 @@ $data = array_values($date_template);
         <h2>Nutzerübersicht</h2>
         <div style="overflow-x: auto;">
             <table class="data-table">
-                <thead><tr><th>Name</th><th>Referat</th><th>Guthaben</th><th class="actions">Aktionen</th></tr></thead>
+                <thead><tr><th>Name</th><th>OE</th><th>Guthaben</th><th class="actions">Aktionen</th></tr></thead>
                 <tbody>
                     <?php foreach ($users as $user): ?>
                     <tr style="cursor:pointer;" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
