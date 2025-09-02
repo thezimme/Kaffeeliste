@@ -1,3 +1,4 @@
+
 <?php
 require_once '../config.php';
 session_start();
@@ -7,74 +8,83 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     header('Location: index.php');
     exit;
 }
-// KORRIGIERTE ABFRAGE: Lädt die OE direkt aus der users-Tabelle.
+
 $users = $pdo->query("
     SELECT id, firstname, lastname, balance, oe
     FROM users ORDER BY lastname, firstname
 ")->fetchAll();
 
-// --- BEREITS VORHANDENE STATISTIKEN ---
-$stats_today_total = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE DATE(booking_time) = CURDATE()")->fetchColumn();
-$stats_month = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE MONTH(booking_time) = MONTH(CURDATE()) AND YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
-$stats_year = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
+try {
+    // --- BEREITS VORHANDENE STATISTIKEN ---
+    $stats_today_total = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE DATE(booking_time) = CURDATE()")->fetchColumn();
+    $stats_month = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE MONTH(booking_time) = MONTH(CURDATE()) AND YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
+    $stats_year = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
 
-// --- NEUE STATISTIKEN ---
-// "Kaffeekönig" des Tages
-$top_drinker_today = $pdo->query("
-    SELECT u.firstname, u.lastname, SUM(b.quantity) as total
-    FROM bookings b
-    JOIN users u ON b.user_id = u.id
-    WHERE DATE(b.booking_time) = CURDATE()
-    GROUP BY b.user_id
-    ORDER BY total DESC
-    LIMIT 1
-")->fetch();
+    // --- NEUE STATISTIKEN ---
+    // "Kaffeekönig" des Tages (ROBUSTERE ABFRAGE)
+    $top_drinker_today = $pdo->query("
+        SELECT u.firstname, u.lastname, SUM(b.quantity) as total_quantity
+        FROM bookings b
+        JOIN users u ON b.user_id = u.id
+        WHERE DATE(b.booking_time) = CURDATE()
+        GROUP BY u.id, u.firstname, u.lastname
+        ORDER BY total_quantity DESC
+        LIMIT 1
+    ")->fetch();
 
-// "Kaffeekönig" insgesamt
-$top_drinker_overall = $pdo->query("
-    SELECT u.firstname, u.lastname, SUM(b.quantity) as total
-    FROM bookings b
-    JOIN users u ON b.user_id = u.id
-    GROUP BY b.user_id
-    ORDER BY total DESC
-    LIMIT 1
-")->fetch();
+    // "Kaffeekönig" insgesamt (ROBUSTERE ABFRAGE)
+    $top_drinker_overall = $pdo->query("
+        SELECT u.firstname, u.lastname, SUM(b.quantity) as total_quantity
+        FROM bookings b
+        JOIN users u ON b.user_id = u.id
+        GROUP BY u.id, u.firstname, u.lastname
+        ORDER BY total_quantity DESC
+        LIMIT 1
+    ")->fetch();
 
-// Durchschnittlicher Kaffeeverbrauch pro Tag
-$avg_coffee_per_day = $pdo->query("
-    SELECT AVG(daily_total)
-    FROM (
-        SELECT SUM(quantity) as daily_total
+    // Durchschnittlicher Kaffeeverbrauch pro Tag
+    $avg_coffee_per_day = $pdo->query("
+        SELECT AVG(daily_total)
+        FROM (
+            SELECT SUM(quantity) as daily_total
+            FROM bookings
+            GROUP BY DATE(booking_time)
+        ) as daily_sums
+    ")->fetchColumn();
+
+    // --- DATEN FÜR DIE GRAFIK ---
+    $chart_data_query = $pdo->query("
+        SELECT DATE_FORMAT(booking_time, '%Y-%m-%d') as date, SUM(quantity) as total
         FROM bookings
-        GROUP BY DATE(booking_time)
-    ) as daily_sums
-")->fetchColumn();
+        WHERE booking_time >= CURDATE() - INTERVAL 6 DAY
+        GROUP BY DATE_FORMAT(booking_time, '%Y-%m-%d')
+        ORDER BY date ASC
+    ");
+    $chart_data = $chart_data_query->fetchAll(PDO::FETCH_ASSOC);
 
-
-// --- DATEN FÜR DIE GRAFIK ---
-$chart_data_query = $pdo->query("
-    SELECT DATE_FORMAT(booking_time, '%Y-%m-%d') as date, SUM(quantity) as total
-    FROM bookings
-    WHERE booking_time >= CURDATE() - INTERVAL 6 DAY
-    GROUP BY DATE_FORMAT(booking_time, '%Y-%m-%d')
-    ORDER BY date ASC
-");
-$chart_data = $chart_data_query->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    // Fallback, falls eine Statistik-Abfrage fehlschlägt, um einen 500-Error zu verhindern
+    $_SESSION['message'] = 'Fehler beim Laden der Statistiken.';
+    $_SESSION['message_type'] = 'error';
+    $stats_today_total = $stats_month = $stats_year = $avg_coffee_per_day = 0;
+    $top_drinker_today = $top_drinker_overall = null;
+    $chart_data = [];
+}
 
 $labels = [];
 $data = [];
-$date_template = [];
-for ($i = 6; i >= 0; $i--) {
-    $date = date('Y-m-d', strtotime("-$i days"));
-    $labels[] = date('d.m.', strtotime($date));
-    $date_template[$date] = 0;
+if (!empty($chart_data)) {
+    $date_template = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $date = date('Y-m-d', strtotime("-$i days"));
+        $labels[] = date('d.m.', strtotime($date));
+        $date_template[$date] = 0;
+    }
+    foreach ($chart_data as $row) {
+        $date_template[$row['date']] = (int)$row['total'];
+    }
+    $data = array_values($date_template);
 }
-
-foreach ($chart_data as $row) {
-    $date_template[$row['date']] = (int)$row['total'];
-}
-$data = array_values($date_template);
-
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -201,7 +211,7 @@ $data = array_values($date_template);
             <div class="stat-item">
                 <h3>Kaffeekönig (Heute)</h3>
                 <?php if ($top_drinker_today): ?>
-                    <p><?= $top_drinker_today['total'] ?></p>
+                    <p><?= $top_drinker_today['total_quantity'] ?></p>
                     <p class="sub-text"><?= htmlspecialchars($top_drinker_today['firstname'] . ' ' . $top_drinker_today['lastname']) ?></p>
                 <?php else: ?>
                     <p>-</p>
@@ -211,7 +221,7 @@ $data = array_values($date_template);
             <div class="stat-item">
                 <h3>Kaffeekönig (Gesamt)</h3>
                  <?php if ($top_drinker_overall): ?>
-                    <p><?= $top_drinker_overall['total'] ?></p>
+                    <p><?= $top_drinker_overall['total_quantity'] ?></p>
                     <p class="sub-text"><?= htmlspecialchars($top_drinker_overall['firstname'] . ' ' . $top_drinker_overall['lastname']) ?></p>
                 <?php else: ?>
                     <p>-</p>
