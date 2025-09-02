@@ -48,7 +48,6 @@ if (isset($_COOKIE['coffee_user'])) {
     </script>
 
     <style>
-        /* Zusätzliche Styles, die nach den Komponenten geladen werden müssen */
         md-outlined-select, md-filled-button {
             width: 100%;
         }
