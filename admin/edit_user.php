@@ -44,6 +44,13 @@ if (!$user) {
       import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
       document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
     </script>
+    <style>
+        .button-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+    </style>
 </head>
 <body>
 <main>
@@ -69,6 +76,16 @@ if (!$user) {
                 <span class="material-symbols-outlined" slot="icon">save</span>
                 Speichern
             </md-filled-button>
+        </form>
+        
+        <hr style="margin: 24px 0; border: 1px solid var(--md-sys-color-surface-variant);">
+        
+        <form action="delete_user.php" method="POST" onsubmit="return confirm('Bist du sicher, dass du diesen Nutzer und alle seine Daten endgültig löschen möchtest?');">
+             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+             <md-outlined-button type="submit" style="width: 100%;">
+                <span class="material-symbols-outlined" slot="icon">delete</span>
+                Nutzer löschen
+            </md-outlined-button>
         </form>
     </div>
 </main>
