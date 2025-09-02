@@ -108,7 +108,7 @@ if (isset($_COOKIE['coffee_user'])) {
             </md-outlined-select>
 
             <md-filled-button type="submit">
-                <span class="material-symbols-outlined" slot="icon">local_mall</span>
+                <span class="material-symbols-outlined" slot="icon">coffee</span>
                 Buchen
             </md-filled-button>
         </form>
