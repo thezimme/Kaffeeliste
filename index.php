@@ -31,6 +31,7 @@ if (isset($_COOKIE['coffee_user'])) {
     <title>Kaffeeliste</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
 
     <script type="importmap">
@@ -51,11 +52,34 @@ if (isset($_COOKIE['coffee_user'])) {
         md-outlined-select, md-filled-button {
             width: 100%;
         }
+        .status-card {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .status-card .balance {
+            color: var(--md-sys-color-primary);
+        }
+        .status-card .balance.negative {
+            color: var(--md-sys-color-error);
+        }
     </style>
 </head>
 <body>
 
 <main>
+
+    <?php if ($user_data): ?>
+    <div class="card status-card">
+        <h2 style="text-align: center; margin: 0; font-weight: 400;">
+            Hallo, <span style="font-weight: 500;"><?= htmlspecialchars($user_data['firstname']) ?></span>!
+        </h2>
+        <p style="text-align: center; margin-top: 8px; color: var(--md-sys-color-on-primary-container);">Dein aktuelles Guthaben:</p>
+        <div class="balance <?= $user_data['balance'] < 0 ? 'negative' : '' ?>">
+            <?= number_format($user_data['balance'], 2, ',', '.') ?> €
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <div class="card">
         <h1>
             <span class="material-symbols-outlined">coffee</span>
@@ -91,14 +115,6 @@ if (isset($_COOKIE['coffee_user'])) {
 
     <?php if ($user_data): ?>
     <div class="card">
-        <h2 style="text-align: center; margin-bottom: 8px;">Hallo, <?= htmlspecialchars($user_data['firstname']) ?>!</h2>
-        <p style="text-align: center; margin-top: 0; color: var(--md-sys-color-on-surface-variant);">Dein aktuelles Guthaben:</p>
-        <div class="balance <?= $user_data['balance'] < 0 ? 'negative' : '' ?>">
-            <?= number_format($user_data['balance'], 2, ',', '.') ?> €
-        </div>
-    </div>
-    
-    <div class="card">
         <h2>Letzte Aktivitäten</h2>
         <md-list>
             <md-list-item>
@@ -116,6 +132,7 @@ if (isset($_COOKIE['coffee_user'])) {
                     <?php endif; ?>
                 </div>
             </md-list-item>
+            <md-divider></md-divider>
             <md-list-item>
                 <div slot="headline">Vorletzte Buchung</div>
                 <div slot="supporting-text">
@@ -131,6 +148,7 @@ if (isset($_COOKIE['coffee_user'])) {
                     <?php endif; ?>
                 </div>
             </md-list-item>
+             <md-divider></md-divider>
             <md-list-item>
                 <div slot="headline">Letzte Einzahlung</div>
                 <div slot="supporting-text">
@@ -151,10 +169,8 @@ if (isset($_COOKIE['coffee_user'])) {
     <?php endif; ?>
 </main>
 <div class="fab-container">
-    <md-fab variant="primary" aria-label="Neuer Kaffee" onclick="document.querySelector('form').scrollIntoView({ behavior: 'smooth' });">
-        <md-icon slot="icon">
-            <span class="material-symbols-outlined">add</span>
-        </md-icon>
+    <md-fab variant="primary" aria-label="Neue Buchung" onclick="document.querySelector('form').scrollIntoView({ behavior: 'smooth' });">
+        <span class="material-symbols-outlined" slot="icon">add</span>
     </md-fab>
 </div>
 
