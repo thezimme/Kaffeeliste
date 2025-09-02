@@ -13,12 +13,45 @@ $users = $pdo->query("
     FROM users ORDER BY lastname, firstname
 ")->fetchAll();
 
-// Statistiken
-$stats_today = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE DATE(booking_time) = CURDATE()")->fetchColumn();
+// --- BEREITS VORHANDENE STATISTIKEN ---
+$stats_today_total = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE DATE(booking_time) = CURDATE()")->fetchColumn();
 $stats_month = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE MONTH(booking_time) = MONTH(CURDATE()) AND YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
 $stats_year = $pdo->query("SELECT SUM(quantity) as total FROM bookings WHERE YEAR(booking_time) = YEAR(CURDATE())")->fetchColumn();
 
-// Daten für die Grafik
+// --- NEUE STATISTIKEN ---
+// "Kaffeekönig" des Tages
+$top_drinker_today = $pdo->query("
+    SELECT u.firstname, u.lastname, SUM(b.quantity) as total
+    FROM bookings b
+    JOIN users u ON b.user_id = u.id
+    WHERE DATE(b.booking_time) = CURDATE()
+    GROUP BY b.user_id
+    ORDER BY total DESC
+    LIMIT 1
+")->fetch();
+
+// "Kaffeekönig" insgesamt
+$top_drinker_overall = $pdo->query("
+    SELECT u.firstname, u.lastname, SUM(b.quantity) as total
+    FROM bookings b
+    JOIN users u ON b.user_id = u.id
+    GROUP BY b.user_id
+    ORDER BY total DESC
+    LIMIT 1
+")->fetch();
+
+// Durchschnittlicher Kaffeeverbrauch pro Tag
+$avg_coffee_per_day = $pdo->query("
+    SELECT AVG(daily_total)
+    FROM (
+        SELECT SUM(quantity) as daily_total
+        FROM bookings
+        GROUP BY DATE(booking_time)
+    ) as daily_sums
+")->fetchColumn();
+
+
+// --- DATEN FÜR DIE GRAFIK ---
 $chart_data_query = $pdo->query("
     SELECT DATE_FORMAT(booking_time, '%Y-%m-%d') as date, SUM(quantity) as total
     FROM bookings
@@ -83,12 +116,17 @@ $data = array_values($date_template);
             margin: 0 0 8px 0;
             font-size: 1em;
             color: var(--md-sys-color-on-surface-variant);
+            font-weight: 500;
         }
         .stat-item p {
             margin: 0;
             font-size: 2em;
             font-weight: 700;
             color: var(--md-sys-color-primary);
+        }
+         .stat-item .sub-text {
+            font-size: 0.8em;
+            color: var(--md-sys-color-on-surface-variant);
         }
     </style>
 </head>
@@ -144,7 +182,7 @@ $data = array_values($date_template);
         <div class="stats-grid">
             <div class="stat-item">
                 <h3>Heute</h3>
-                <p><?= $stats_today ?: 0 ?></p>
+                <p><?= $stats_today_total ?: 0 ?></p>
             </div>
             <div class="stat-item">
                 <h3>Dieser Monat</h3>
@@ -157,6 +195,34 @@ $data = array_values($date_template);
         </div>
         <div style="margin-top: 24px;">
             <canvas id="coffeeChart"></canvas>
+        </div>
+        
+        <h3 style="margin-top: 32px;">Statistik-Highlights</h3>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>Kaffeekönig (Heute)</h3>
+                <?php if ($top_drinker_today): ?>
+                    <p><?= $top_drinker_today['total'] ?></p>
+                    <p class="sub-text"><?= htmlspecialchars($top_drinker_today['firstname'] . ' ' . $top_drinker_today['lastname']) ?></p>
+                <?php else: ?>
+                    <p>-</p>
+                    <p class="sub-text">Heute noch nichts gebucht</p>
+                <?php endif; ?>
+            </div>
+            <div class="stat-item">
+                <h3>Kaffeekönig (Gesamt)</h3>
+                 <?php if ($top_drinker_overall): ?>
+                    <p><?= $top_drinker_overall['total'] ?></p>
+                    <p class="sub-text"><?= htmlspecialchars($top_drinker_overall['firstname'] . ' ' . $top_drinker_overall['lastname']) ?></p>
+                <?php else: ?>
+                    <p>-</p>
+                <?php endif; ?>
+            </div>
+            <div class="stat-item">
+                <h3>Ø Kaffee / Tag</h3>
+                <p><?= number_format($avg_coffee_per_day, 1, ',', '.') ?></p>
+                <p class="sub-text">Durchschnittlicher Verbrauch</p>
+            </div>
         </div>
     </div>
 
