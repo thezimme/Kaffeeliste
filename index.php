@@ -36,6 +36,7 @@ if (isset($_COOKIE['coffee_user'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaffeeliste</title>
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://unpkg.com/material-web@1.0.0-pre.18/dist/web.js"></script>
 </head>
 <body>
 
@@ -46,44 +47,33 @@ if (isset($_COOKIE['coffee_user'])) {
         <?php
         // Zeige Erfolgs- oder Fehlermeldungen an
         if (isset($_SESSION['message'])) {
-            echo '<div class="message ' . $_SESSION['message_type'] . '">' . $_SESSION['message'] . '</div>';
+            echo '<div class="message ' . $_SESSION['message_type'] . '">' . htmlspecialchars($_SESSION['message']) . '</div>';
             unset($_SESSION['message']);
             unset($_SESSION['message_type']);
         }
         ?>
 
-        <form action="buchen.php" method="post">
-            <div class="form-group">
-                <label for="firstname">Vorname</label>
-                <input type="text" id="firstname" name="firstname" class="input-field" required
-                       value="<?= htmlspecialchars($user_names['firstname'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label for="lastname">Nachname</label>
-                <input type="text" id="lastname" name="lastname" class="input-field" required
-                       value="<?= htmlspecialchars($user_names['lastname'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label for="reference">Referat / Abteilung</label>
-                <input type="text" id="reference" name="reference" class="input-field" required
-                       value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label for="quantity">Anzahl Kaffee</label>
-                <select id="quantity" name="quantity" class="input-field">
-                    <?php for ($i = 1; $i <= 10; $i++): ?>
-                        <option value="<?= $i ?>"><?= $i ?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
-            <button type="submit" class="button">Buchen</button>
+        <form action="buchen.php" method="post" style="display: flex; flex-direction: column; gap: 20px;">
+            <md-outlined-text-field label="Vorname" name="firstname" required value="<?= htmlspecialchars($user_names['firstname'] ?? '') ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Nachname" name="lastname" required value="<?= htmlspecialchars($user_names['lastname'] ?? '') ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Referat / Abteilung" name="reference" required value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>"></md-outlined-text-field>
+
+            <md-outlined-select label="Anzahl Kaffee" name="quantity">
+                <?php for ($i = 1; $i <= 10; $i++): ?>
+                    <md-menu-item value="<?= $i ?>">
+                        <div slot="headline"><?= $i ?></div>
+                    </md-menu-item>
+                <?php endfor; ?>
+            </md-outlined-select>
+
+            <md-filled-button type="submit">Buchen</md-filled-button>
         </form>
     </div>
 
     <?php if ($user_data): ?>
-    <div class="card user-info">
-        <h2>Hallo, <?= htmlspecialchars($user_data['firstname']) ?>!</h2>
-        <p>Dein aktuelles Guthaben:</p>
+    <div class="card">
+        <h2 style="text-align: center; margin-bottom: 8px;">Hallo, <?= htmlspecialchars($user_data['firstname']) ?>!</h2>
+        <p style="text-align: center; margin-top: 0; color: var(--md-sys-color-on-surface-variant);">Dein aktuelles Guthaben:</p>
         <div class="balance <?= $user_data['balance'] < 0 ? 'negative' : '' ?>">
             <?= number_format($user_data['balance'], 2, ',', '.') ?> €
         </div>
