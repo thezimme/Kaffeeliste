@@ -16,7 +16,7 @@ define('KAFFEE_PREIS', 0.30); // Preis pro Kaffee in Euro
 // --- Admin Passwort ---
 // Speichere niemals Passwörter im Klartext! Nutze stattdessen password_hash().
 // Das Passwort hier ist 'dein_sicheres_admin_passwort'
-define('ADMIN_PASSWORD_HASH', '$2y$10$g.pD2.v5wJ5zC0lY2K1s8eA.L6l6l6L6l6L6l6L6l6L6l6L6l6L6');
+define('ADMIN_PASSWORD', 'KaffeePause123!');
 
 // --- Datenbankverbindung herstellen (PDO) ---
 $options = [
