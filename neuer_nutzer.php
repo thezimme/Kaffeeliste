@@ -15,6 +15,7 @@ $new_user_data = $_SESSION['new_user_data'];
     <title>Neuen Nutzer anlegen?</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
 
     <script type="importmap">
@@ -29,8 +30,11 @@ $new_user_data = $_SESSION['new_user_data'];
 <body>
 <main>
     <div class="card" style="text-align: center;">
-        <h1>Unbekannter Nutzer</h1>
-        <p style="font-size: 18px; margin-bottom: 24px;">
+        <h1>
+            <span class="material-symbols-outlined">person_search</span>
+            Unbekannter Nutzer
+        </h1>
+        <p style="font-size: 1.1em; margin-bottom: 24px; line-height: 1.6;">
             Der Nutzer <strong><?= htmlspecialchars($new_user_data['firstname'] . ' ' . $new_user_data['lastname']) ?></strong> wurde nicht gefunden.
         </p>
         <p>Möchtest du diesen Nutzer neu anlegen und die Buchung durchführen?</p>
