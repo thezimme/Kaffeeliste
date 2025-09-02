@@ -14,7 +14,12 @@ if (!$transaction_id) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = ?");
+$stmt = $pdo->prepare("
+    SELECT t.*, u.firstname, u.lastname 
+    FROM transactions t
+    JOIN users u ON t.user_id = u.id
+    WHERE t.id = ?
+");
 $stmt->execute([$transaction_id]);
 $transaction = $stmt->fetch();
 
@@ -30,26 +35,45 @@ if (!$transaction) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Einzahlung bearbeiten</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="admin_style.css">
+
+    <script type="importmap">
+    { "imports": { "@material/web/": "https://esm.run/@material/web/" } }
+    </script>
+    <script type="module">
+      import '@material/web/all.js';
+      import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+      document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
 </head>
 <body>
 <main>
     <div class="card">
-        <h1>Einzahlung bearbeiten</h1>
-        <form action="update_transaction.php" method="POST">
+        <a href="user_details.php?id=<?= $transaction['user_id'] ?>" style="text-decoration: none; align-self: flex-start; margin-bottom: 16px;">
+            <md-text-button>
+                <span class="material-symbols-outlined" slot="icon">arrow_back</span>
+                Zurück zu <?= htmlspecialchars($transaction['firstname']) ?>
+            </md-text-button>
+        </a>
+        <h1 style="margin-top:0;">Einzahlung bearbeiten</h1>
+         <p style="margin-top:-16px; margin-bottom: 24px; color: var(--md-sys-color-on-surface-variant);">
+            Einzahlung vom <?= date('d.m.Y H:i', strtotime($transaction['transaction_time'])) ?>
+        </p>
+        <form action="update_transaction.php" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
             <input type="hidden" name="transaction_id" value="<?= $transaction['id'] ?>">
             <input type="hidden" name="user_id" value="<?= $transaction['user_id'] ?>">
             <input type="hidden" name="old_amount" value="<?= $transaction['amount'] ?>">
             
-            <div class="form-group">
-                <label for="amount">Betrag in €</label>
-                <input type="number" step="0.01" name="amount" id="amount" class="input-field" value="<?= $transaction['amount'] ?>" required>
-            </div>
-             <div class="form-group">
-                <label for="description">Beschreibung</label>
-                <input type="text" name="description" id="description" class="input-field" value="<?= htmlspecialchars($transaction['description']) ?>" required>
-            </div>
-            <button type="submit" class="button">Speichern</button>
+            <md-outlined-text-field label="Betrag in €" type="number" step="0.01" name="amount" required value="<?= $transaction['amount'] ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Beschreibung" name="description" required value="<?= htmlspecialchars($transaction['description']) ?>"></md-outlined-text-field>
+            
+            <md-filled-button type="submit">
+                <span class="material-symbols-outlined" slot="icon">save</span>
+                Änderungen speichern
+            </md-filled-button>
         </form>
     </div>
 </main>
