@@ -57,7 +57,10 @@ if (isset($_COOKIE['coffee_user'])) {
 
 <main>
     <div class="card">
-        <h1>☕ Kaffeeliste</h1>
+        <h1>
+            <span class="material-symbols-outlined">coffee</span>
+            Kaffeeliste
+        </h1>
 
         <?php
         if (isset($_SESSION['message'])) {
@@ -79,7 +82,10 @@ if (isset($_COOKIE['coffee_user'])) {
                 <?php endfor; ?>
             </md-outlined-select>
 
-            <md-filled-button type="submit">Buchen</md-filled-button>
+            <md-filled-button type="submit">
+                <span class="material-symbols-outlined" slot="icon">add_shopping_cart</span>
+                Buchen
+            </md-filled-button>
         </form>
     </div>
 
@@ -94,53 +100,63 @@ if (isset($_COOKIE['coffee_user'])) {
     
     <div class="card">
         <h2>Letzte Aktivitäten</h2>
-        <div class="activity-grid">
-            <div class="info-item">
-                <h3>Letzte Buchung</h3>
-                <p>
+        <md-list>
+            <md-list-item>
+                <div slot="headline">Letzte Buchung</div>
+                <div slot="supporting-text">
                     <?php if (isset($user_data['bookings'][0])): ?>
-                        <strong><?= $user_data['bookings'][0]['quantity'] ?> Kaffee</strong><br>
-                        <small><?= date('d.m.Y H:i', strtotime($user_data['bookings'][0]['booking_time'])) ?></small>
+                        <?= date('d.m.Y H:i', strtotime($user_data['bookings'][0]['booking_time'])) ?>
                     <?php else: ?>
                         -
                     <?php endif; ?>
-                </p>
-            </div>
-            <div class="info-item">
-                <h3>Vorletzte Buchung</h3>
-                <p>
+                </div>
+                <div slot="trailing-supporting-text">
+                    <?php if (isset($user_data['bookings'][0])): ?>
+                        <strong><?= $user_data['bookings'][0]['quantity'] ?> Kaffee</strong>
+                    <?php endif; ?>
+                </div>
+            </md-list-item>
+            <md-list-item>
+                <div slot="headline">Vorletzte Buchung</div>
+                <div slot="supporting-text">
                     <?php if (isset($user_data['bookings'][1])): ?>
-                        <strong><?= $user_data['bookings'][1]['quantity'] ?> Kaffee</strong><br>
-                        <small><?= date('d.m.Y H:i', strtotime($user_data['bookings'][1]['booking_time'])) ?></small>
+                        <?= date('d.m.Y H:i', strtotime($user_data['bookings'][1]['booking_time'])) ?>
                     <?php else: ?>
                         -
                     <?php endif; ?>
-                </p>
-            </div>
-            <div class="info-item">
-                <h3>Letzte Einzahlung</h3>
-                <p>
-                    <?php if (isset($user_data['last_deposit'])): ?>
-                        <strong><?= number_format($user_data['last_deposit']['amount'], 2, ',', '.') ?> €</strong><br>
-                        <small><?= date('d.m.Y H:i', strtotime($user_data['last_deposit']['transaction_time'])) ?></small>
+                </div>
+                <div slot="trailing-supporting-text">
+                    <?php if (isset($user_data['bookings'][1])): ?>
+                        <strong><?= $user_data['bookings'][1]['quantity'] ?> Kaffee</strong>
+                    <?php endif; ?>
+                </div>
+            </md-list-item>
+            <md-list-item>
+                <div slot="headline">Letzte Einzahlung</div>
+                <div slot="supporting-text">
+                     <?php if (isset($user_data['last_deposit'])): ?>
+                        <?= date('d.m.Y H:i', strtotime($user_data['last_deposit']['transaction_time'])) ?>
                     <?php else: ?>
                         -
                     <?php endif; ?>
-                </p>
-            </div>
-             <div class="info-item">
-                <h3>Gesamtanzahl Kaffee</h3>
-                <?php
-                    $stmt_total = $pdo->prepare("SELECT SUM(quantity) as total FROM bookings WHERE user_id = ?");
-                    $stmt_total->execute([$user_data['id']]);
-                    $total_coffees = $stmt_total->fetchColumn();
-                ?>
-                <p><strong><?= $total_coffees ?: 0 ?></strong></p>
-            </div>
-        </div>
+                </div>
+                <div slot="trailing-supporting-text">
+                   <?php if (isset($user_data['last_deposit'])): ?>
+                        <strong><?= number_format($user_data['last_deposit']['amount'], 2, ',', '.') ?> €</strong>
+                    <?php endif; ?>
+                </div>
+            </md-list-item>
+        </md-list>
     </div>
     <?php endif; ?>
 </main>
+<div class="fab-container">
+    <md-fab variant="primary" aria-label="Neuer Kaffee" onclick="document.querySelector('form').scrollIntoView({ behavior: 'smooth' });">
+        <md-icon slot="icon">
+            <span class="material-symbols-outlined">add</span>
+        </md-icon>
+    </md-fab>
+</div>
 
 </body>
 </html>
