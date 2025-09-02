@@ -20,8 +20,9 @@ $total_cost = KAFFEE_PREIS * $quantity;
 $pdo->beginTransaction();
 try {
     // 1. Neuen Nutzer in 'users' anlegen (Guthaben startet bei 0 und wird dann verringert)
-    $stmt_create = $pdo->prepare("INSERT INTO users (firstname, lastname, balance) VALUES (?, ?, ?)");
-    $stmt_create->execute([$firstname, $lastname, -$total_cost]);
+    // Die OE (`reference`) wird jetzt mitgespeichert!
+    $stmt_create = $pdo->prepare("INSERT INTO users (firstname, lastname, oe, balance) VALUES (?, ?, ?, ?)");
+    $stmt_create->execute([$firstname, $lastname, $reference, -$total_cost]);
     $user_id = $pdo->lastInsertId(); // Die ID des gerade erstellten Nutzers holen
 
     // 2. Die erste Buchung eintragen
