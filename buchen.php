@@ -32,9 +32,9 @@ if (!preg_match('/^[A-Z]\s\d{1,2}$/', $reference)) {
 }
 
 
-// 1. Prüfen, ob der Benutzer existiert
-$stmt = $pdo->prepare("SELECT id FROM users WHERE firstname = ? AND lastname = ?");
-$stmt->execute([$firstname, $lastname]);
+// 1. Prüfen, ob der Benutzer existiert (jetzt mit Vorname, Nachname UND OE)
+$stmt = $pdo->prepare("SELECT id FROM users WHERE firstname = ? AND lastname = ? AND oe = ?");
+$stmt->execute([$firstname, $lastname, $reference]);
 $user = $stmt->fetch();
 
 // 2. Fall: Benutzer existiert
