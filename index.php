@@ -33,6 +33,7 @@ if (isset($_COOKIE['coffee_user'])) {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
 
     <script type="importmap">
     {
@@ -107,10 +108,21 @@ if (isset($_COOKIE['coffee_user'])) {
             </md-outlined-select>
 
             <md-filled-button type="submit">
-                <span class="material-symbols-outlined" slot="icon">add_shopping_cart</span>
+                <span class="material-symbols-outlined" slot="icon">local_mall</span>
                 Buchen
             </md-filled-button>
         </form>
+    </div>
+
+    <div class="card">
+        <h2>Guthaben aufladen</h2>
+        <p>Lade dein Guthaben ganz einfach mit PayPal auf.</p>
+        <a href="https://paypal.de" target="_blank" style="text-decoration: none; margin-top: 16px;">
+            <md-filled-button>
+                <span class="material-symbols-outlined" slot="icon">payments</span>
+                Mit PayPal aufladen
+            </md-filled-button>
+        </a>
     </div>
 
     <?php if ($user_data): ?>
@@ -168,11 +180,6 @@ if (isset($_COOKIE['coffee_user'])) {
     </div>
     <?php endif; ?>
 </main>
-<div class="fab-container">
-    <md-fab variant="primary" aria-label="Neue Buchung" onclick="document.querySelector('form').scrollIntoView({ behavior: 'smooth' });">
-        <span class="material-symbols-outlined" slot="icon">add</span>
-    </md-fab>
-</div>
 
 </body>
 </html>
