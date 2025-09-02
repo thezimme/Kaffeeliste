@@ -36,9 +36,15 @@ $new_user_data = $_SESSION['new_user_data'];
         <p>Möchtest du diesen Nutzer neu anlegen und die Buchung durchführen?</p>
 
         <form action="user_erstellen.php" method="post" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
-            <md-filled-button type="submit">Ja, anlegen und buchen</md-filled-button>
+            <md-filled-button type="submit">
+                <span class="material-symbols-outlined" slot="icon">person_add</span>
+                Ja, anlegen und buchen
+            </md-filled-button>
             <a href="index.php" style="text-decoration: none;">
-                <md-outlined-button style="width: 100%;">Abbrechen</md-outlined-button>
+                <md-outlined-button style="width: 100%;">
+                    <span class="material-symbols-outlined" slot="icon">cancel</span>
+                    Abbrechen
+                </md-outlined-button>
             </a>
         </form>
     </div>
