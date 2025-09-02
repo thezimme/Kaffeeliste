@@ -35,7 +35,7 @@ $new_user_data = $_SESSION['new_user_data'];
             Unbekannter Nutzer
         </h1>
         <p style="font-size: 1.1em; margin-bottom: 24px; line-height: 1.6;">
-            Der Nutzer <strong><?= htmlspecialchars($new_user_data['firstname'] . ' ' . $new_user_data['lastname']) ?></strong> wurde nicht gefunden.
+            Der Nutzer <strong><?= htmlspecialchars($new_user_data['firstname'] . ' ' . $new_user_data['lastname']) ?></strong> mit der OE <strong><?= htmlspecialchars($new_user_data['reference']) ?></strong> wurde nicht gefunden.
         </p>
         <p>Möchtest du diesen Nutzer neu anlegen und die Buchung durchführen?</p>
 
