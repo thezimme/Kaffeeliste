@@ -1,4 +1,3 @@
-
 <?php
 // admin/dashboard.php
 require_once '../config.php';
