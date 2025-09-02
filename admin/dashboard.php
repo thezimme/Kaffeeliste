@@ -1,3 +1,4 @@
+
 <?php
 // admin/dashboard.php
 require_once '../config.php';
@@ -58,6 +59,28 @@ $users = $pdo->query("
             unset($_SESSION['message_type']);
         }
         ?>
+    </div>
+
+    <div class="card">
+        <h2>Guthaben aufladen</h2>
+        <form action="guthaben_buchen.php" method="POST">
+            <div class="form-group">
+                <label for="user_id">Nutzer auswählen</label>
+                <select name="user_id" id="user_id" class="input-field" required>
+                    <option value="">Bitte wählen...</option>
+                    <?php foreach ($users as $user): ?>
+                        <option value="<?= $user['id'] ?>">
+                            <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Betrag in €</label>
+                <input type="number" step="0.01" name="amount" id="amount" class="input-field" required placeholder="z.B. 10.00">
+            </div>
+            <button type="submit" class="button">Guthaben buchen</button>
+        </form>
     </div>
 
     <div class="card">
