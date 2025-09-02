@@ -67,7 +67,7 @@ if (!$user) {
             
             <md-outlined-text-field label="Vorname" name="firstname" required value="<?= htmlspecialchars($user['firstname']) ?>"></md-outlined-text-field>
             <md-outlined-text-field label="Nachname" name="lastname" required value="<?= htmlspecialchars($user['lastname']) ?>"></md-outlined-text-field>
-            <md-outlined-text-field label="Standard-Referat" name="reference" required value="<?= htmlspecialchars($user['last_reference']) ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="Standard-OE" name="reference" required pattern="[A-Z]\s\d{1,2}" title="Bitte im Format 'B 12' eingeben." value="<?= htmlspecialchars($user['last_reference']) ?>"></md-outlined-text-field>
             <p style="font-size: 0.9em; color: var(--md-sys-color-on-surface-variant); margin: -8px 0 8px 0;">
                 Ändert nur den Standardwert für neue Buchungen und das Cookie.
             </p>
