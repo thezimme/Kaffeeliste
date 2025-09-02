@@ -1,9 +1,15 @@
 /* admin/admin_style.css */
 .details-grid {
     display: grid;
-    /* Layout auf eine einzelne Spalte geändert, die Karten sind nun immer untereinander */
     grid-template-columns: 1fr;
     gap: 24px;
+}
+
+/* NEUE REGEL: Passt das Guthaben in der Kopfzeile der Detailansicht an */
+.user-header-card .balance {
+    font-size: 1.2em; /* Passt sich der Textgröße an */
+    font-weight: 700;
+    vertical-align: baseline; /* Sorgt für saubere Ausrichtung */
 }
 
 .data-table {
@@ -27,11 +33,10 @@
     border-bottom: none;
 }
 
-/* NEUE REGEL: Setzt die Schriftgröße für Guthaben in Tabellen zurück */
 .data-table .balance {
-    font-size: inherit; /* Erbt die Schriftgröße von der Tabellenzeile */
-    font-weight: 500;   /* Bleibt leicht fett zur Hervorhebung */
-    text-align: right;  /* Stellt sicher, dass es rechtsbündig ist */
+    font-size: inherit;
+    font-weight: 500;
+    text-align: right;
 }
 
 .data-table .amount-coffee {
