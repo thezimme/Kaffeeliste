@@ -39,7 +39,9 @@ $transactions->execute([$user_id]);
 <body>
 <main>
     <div class="card">
-        <a href="dashboard.php" style="text-decoration: none;"><md-text-button>&larr; Zurück zum Dashboard</md-text-button></a>
+        <a href="dashboard.php" style="text-decoration: none;"><md-text-button>
+        <span class="material-symbols-outlined" slot="icon">arrow_back</span>
+        Zurück zum Dashboard</md-text-button></a>
         <h1 style="margin-top: 16px;">Details für <?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></h1>
         <p style="text-align: center; font-size: 1.2em; margin-bottom: 0;">Aktuelles Guthaben: <strong class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</strong></p>
     </div>
@@ -47,15 +49,22 @@ $transactions->execute([$user_id]);
     <div class="details-grid">
         <div class="card">
             <h2>Kaffee-Buchungen</h2>
-            <table class="transaction-list">
-                <thead><tr><th>Datum</th><th>Anzahl</th><th style="text-align: right;">Betrag</th><th>Aktionen</th></tr></thead>
+            <table class="data-table">
+                <thead><tr><th>Datum</th><th>Anzahl</th><th style="text-align: right;">Betrag</th><th class="actions">Aktionen</th></tr></thead>
                 <tbody>
                     <?php foreach ($bookings as $booking): ?>
                     <tr>
                         <td><?= date('d.m.Y H:i', strtotime($booking['booking_time'])) ?></td>
                         <td><?= $booking['quantity'] ?></td>
                         <td class="amount-coffee" style="text-align: right;">-<?= number_format($booking['quantity'] * KAFFEE_PREIS, 2, ',', '.') ?> €</td>
-                        <td class="actions"><a href="edit_booking.php?id=<?= $booking['id'] ?>">✏️</a> <a href="delete_booking.php?id=<?= $booking['id'] ?>" onclick="return confirm('Sicher?')">🗑️</a></td>
+                        <td class="actions">
+                            <md-icon-button href="edit_booking.php?id=<?= $booking['id'] ?>">
+                                <span class="material-symbols-outlined">edit</span>
+                            </md-icon-button>
+                            <md-icon-button href="delete_booking.php?id=<?= $booking['id'] ?>" onclick="return confirm('Sicher?')">
+                                <span class="material-symbols-outlined">delete</span>
+                            </md-icon-button>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -63,15 +72,22 @@ $transactions->execute([$user_id]);
         </div>
         <div class="card">
             <h2>Guthaben-Einzahlungen</h2>
-            <table class="transaction-list">
-                <thead><tr><th>Datum</th><th>Beschreibung</th><th style="text-align: right;">Betrag</th><th>Aktionen</th></tr></thead>
+            <table class="data-table">
+                <thead><tr><th>Datum</th><th>Beschreibung</th><th style="text-align: right;">Betrag</th><th class="actions">Aktionen</th></tr></thead>
                 <tbody>
                     <?php foreach ($transactions as $transaction): ?>
                     <tr>
                         <td><?= date('d.m.Y H:i', strtotime($transaction['transaction_time'])) ?></td>
                         <td><?= htmlspecialchars($transaction['description']) ?></td>
                         <td class="amount-deposit" style="text-align: right;">+<?= number_format($transaction['amount'], 2, ',', '.') ?> €</td>
-                        <td class="actions"><a href="edit_transaction.php?id=<?= $transaction['id'] ?>">✏️</a> <a href="delete_transaction.php?id=<?= $transaction['id'] ?>" onclick="return confirm('Sicher?')">🗑️</a></td>
+                        <td class="actions">
+                             <md-icon-button href="edit_transaction.php?id=<?= $transaction['id'] ?>">
+                                <span class="material-symbols-outlined">edit</span>
+                            </md-icon-button>
+                            <md-icon-button href="delete_transaction.php?id=<?= $transaction['id'] ?>" onclick="return confirm('Sicher?')">
+                                <span class="material-symbols-outlined">delete</span>
+                            </md-icon-button>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
