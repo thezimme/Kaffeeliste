@@ -5,9 +5,11 @@ session_start();
 
 // Logik zum Abrufen von Benutzerdaten, falls ein Cookie gesetzt ist
 $user_data = null;
+$user_names = []; // Initialisiere das Array, um Fehler zu vermeiden
 if (isset($_COOKIE['coffee_user'])) {
-    $user_names = json_decode($_COOKIE['coffee_user'], true);
-    if ($user_names && isset($user_names['firstname']) && isset($user_names['lastname'])) {
+    $user_names_from_cookie = json_decode($_COOKIE['coffee_user'], true);
+    if ($user_names_from_cookie && isset($user_names_from_cookie['firstname']) && isset($user_names_from_cookie['lastname'])) {
+        $user_names = $user_names_from_cookie; // Weise die Werte zu, wenn sie gültig sind
         $stmt = $pdo->prepare("SELECT * FROM users WHERE firstname = ? AND lastname = ?");
         $stmt->execute([$user_names['firstname'], $user_names['lastname']]);
         $user_data = $stmt->fetch();
