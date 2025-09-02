@@ -21,6 +21,7 @@ $users = $pdo->query("
     <title>Admin Dashboard</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="admin_style.css">
 
@@ -40,10 +41,10 @@ $users = $pdo->query("
 <body>
 <main>
     <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <h1>
                 <span class="material-symbols-outlined">admin_panel_settings</span>
-                Admin Dashboard
+                Dashboard
             </h1>
             <a href="logout.php" style="text-decoration: none;">
                 <md-outlined-button>
@@ -78,26 +79,32 @@ $users = $pdo->query("
 
     <div class="card">
         <h2>Nutzerübersicht</h2>
-        <table class="data-table">
-            <thead><tr><th>Name</th><th>Referat</th><th>Guthaben</th><th class="actions">Aktionen</th></tr></thead>
-            <tbody>
-                <?php foreach ($users as $user): ?>
-                <tr style="cursor:pointer;" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
-                    <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
-                    <td><?= htmlspecialchars($user['last_reference']) ?></td>
-                    <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</td>
-                    <td class="actions">
-                        <md-icon-button href="edit_user.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
-                            <span class="material-symbols-outlined">edit</span>
-                        </md-icon-button>
-                         <md-icon-button href="user_details.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
-                            <span class="material-symbols-outlined">visibility</span>
-                        </md-icon-button>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div style="overflow-x: auto;">
+            <table class="data-table">
+                <thead><tr><th>Name</th><th>Referat</th><th>Guthaben</th><th class="actions">Aktionen</th></tr></thead>
+                <tbody>
+                    <?php foreach ($users as $user): ?>
+                    <tr style="cursor:pointer;" onclick="window.location.href='user_details.php?id=<?= $user['id'] ?>'">
+                        <td><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']) ?></td>
+                        <td><?= htmlspecialchars($user['last_reference']) ?></td>
+                        <td class="balance <?= $user['balance'] < 0 ? 'negative' : '' ?>"><?= number_format($user['balance'], 2, ',', '.') ?> €</td>
+                        <td class="actions">
+                            <a href="edit_user.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
+                                <md-icon-button>
+                                    <span class="material-symbols-outlined">edit</span>
+                                </md-icon-button>
+                            </a>
+                             <a href="user_details.php?id=<?= $user['id'] ?>" onclick="event.stopPropagation()">
+                                <md-icon-button>
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </md-icon-button>
+                             </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 </body>
