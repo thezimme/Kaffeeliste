@@ -114,7 +114,7 @@ if (isset($_COOKIE['coffee_user'])) {
                         <div slot="headline"><?= $i ?></div>
                     </md-select-option>
                 <?php endfor; ?>
-            </md-outlined-select>
+            </end-outlined-select>
 
             <md-filled-button type="submit">
                 <span class="material-symbols-outlined" slot="icon">coffee</span>
@@ -124,20 +124,19 @@ if (isset($_COOKIE['coffee_user'])) {
     </div>
 
     <div class="card">
-        <h2>Guthaben aufladen</h2>
-        <p>Wähle einen Betrag oder gib einen freien Betrag direkt bei PayPal ein. Der Link lautet: <a href="https://www.paypal.com/paypalme/thezimmepays" target="_blank">paypal.me/thezimmepays</a></p>
+        <h2>Guthaben aufladen via PayPal</h2>
         <div class="paypal-buttons">
-            <a href="https://www.paypal.com/paypalme/thezimmepays/5" target="_blank">
+            <a href="https://paypal.me/tomzimmermann/5" target="_blank">
                 <md-filled-button>5 €</md-filled-button>
             </a>
-            <a href="https://www.paypal.com/paypalme/thezimmepays/10" target="_blank">
+            <a href="https://paypal.me/tomzimmermann/10" target="_blank">
                 <md-filled-button>10 €</md-filled-button>
             </a>
-            <a href="https://www.paypal.com/paypalme/thezimmepays/20" target="_blank">
+            <a href="https://paypal.me/tomzimmermann/20" target="_blank">
                 <md-filled-button>20 €</md-filled-button>
             </a>
-            <a href="https://www.paypal.com/paypalme/thezimmepays" target="_blank">
-                <md-outlined-button>Freier Betrag</md-outlined-button>
+            <a href="https://paypal.me/tomzimmermann" target="_blank">
+                <md-filled-button>Freier Betrag</md-filled-button>
             </a>
         </div>
     </div>
