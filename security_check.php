@@ -1,13 +1,8 @@
 <?php
 // security_check.php
 
-// Stellt sicher, dass die Session gestartet ist
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Lädt die Konfiguration, um auf den Token zugreifen zu können
-require_once 'config.php';
+// Diese Datei geht davon aus, dass die Session bereits gestartet
+// und die config.php bereits geladen wurde.
 
 // 1. Prüfen, ob der Nutzer bereits autorisiert ist (via Session)
 if (isset($_SESSION['is_authorized']) && $_SESSION['is_authorized'] === true) {
