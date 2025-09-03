@@ -63,6 +63,15 @@ if (isset($_COOKIE['coffee_user'])) {
         .status-card .balance.negative {
             color: var(--md-sys-color-error);
         }
+        .paypal-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .paypal-buttons a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -97,7 +106,7 @@ if (isset($_COOKIE['coffee_user'])) {
         <form action="buchen.php" method="post" style="display: flex; flex-direction: column; gap: 20px;">
             <md-outlined-text-field label="Vorname" name="firstname" required value="<?= htmlspecialchars($user_names['firstname'] ?? '') ?>"></md-outlined-text-field>
             <md-outlined-text-field label="Nachname" name="lastname" required value="<?= htmlspecialchars($user_names['lastname'] ?? '') ?>"></md-outlined-text-field>
-            <md-outlined-text-field label="OE" name="reference" required pattern="[A-Z]\s\d{1,2}" title="Bitte im Format 'B 12' eingeben." value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>"></md-outlined-text-field>
+            <md-outlined-text-field label="OE" name="reference" required pattern="[A-Z]\s\d{1,2}" title="Bitte im Format 'B 12' eingeben." placeholder="V 12" value="<?= htmlspecialchars($user_names['reference'] ?? '') ?>"></md-outlined-text-field>
 
             <md-outlined-select label="Anzahl Kaffee" name="quantity">
                 <?php for ($i = 1; $i <= 10; $i++): ?>
@@ -116,13 +125,21 @@ if (isset($_COOKIE['coffee_user'])) {
 
     <div class="card">
         <h2>Guthaben aufladen</h2>
-        <p>Lade dein Guthaben ganz einfach mit PayPal auf.</p>
-        <a href="https://paypal.de" target="_blank" style="text-decoration: none; margin-top: 16px;">
-            <md-filled-button>
-                <span class="material-symbols-outlined" slot="icon">payments</span>
-                Mit PayPal aufladen
-            </md-filled-button>
-        </a>
+        <p>Wähle einen Betrag oder gib einen freien Betrag direkt bei PayPal ein. Der Link lautet: <a href="https://www.paypal.com/paypalme/thezimmepays" target="_blank">paypal.me/thezimmepays</a></p>
+        <div class="paypal-buttons">
+            <a href="https://www.paypal.com/paypalme/thezimmepays/5" target="_blank">
+                <md-filled-button>5 €</md-filled-button>
+            </a>
+            <a href="https://www.paypal.com/paypalme/thezimmepays/10" target="_blank">
+                <md-filled-button>10 €</md-filled-button>
+            </a>
+            <a href="https://www.paypal.com/paypalme/thezimmepays/20" target="_blank">
+                <md-filled-button>20 €</md-filled-button>
+            </a>
+            <a href="https://www.paypal.com/paypalme/thezimmepays" target="_blank">
+                <md-outlined-button>Freier Betrag</md-outlined-button>
+            </a>
+        </div>
     </div>
 
     <?php if ($user_data): ?>
