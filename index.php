@@ -1,7 +1,6 @@
 <?php
 // index.php Final
-require_once 'config.php';
-session_start();
+require_once 'security_check.php'; // Ersetzt config.php und session_start() und prüft den Zugriff
 
 $user_data = null;
 $user_names = [];
