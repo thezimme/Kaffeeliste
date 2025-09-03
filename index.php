@@ -115,7 +115,7 @@ if (isset($_COOKIE['coffee_user'])) {
                         <div slot="headline"><?= $i ?></div>
                     </md-select-option>
                 <?php endfor; ?>
-            </end-outlined-select>
+            </md-outlined-select>
 
             <md-filled-button type="submit">
                 <span class="material-symbols-outlined" slot="icon">coffee</span>
