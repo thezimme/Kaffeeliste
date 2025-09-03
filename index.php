@@ -127,16 +127,16 @@ if (isset($_COOKIE['coffee_user'])) {
     <div class="card">
         <h2>Guthaben aufladen via PayPal</h2>
         <div class="paypal-buttons">
-            <a href="https://paypal.me/tomzimmermann/5" target="_blank">
+            <a href="https://paypal.me/juliawiebe38/5" target="_blank">
                 <md-filled-button>5 €</md-filled-button>
             </a>
-            <a href="https://paypal.me/tomzimmermann/10" target="_blank">
+            <a href="https://paypal.me/juliawiebe38/10" target="_blank">
                 <md-filled-button>10 €</md-filled-button>
             </a>
-            <a href="https://paypal.me/tomzimmermann/20" target="_blank">
+            <a href="https://paypal.me/juliawiebe38/20" target="_blank">
                 <md-filled-button>20 €</md-filled-button>
             </a>
-            <a href="https://paypal.me/tomzimmermann" target="_blank">
+            <a href="https://paypal.me/juliawiebe38" target="_blank">
                 <md-filled-button>Freier Betrag</md-filled-button>
             </a>
         </div>
