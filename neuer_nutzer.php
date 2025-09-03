@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'security_check.php'; // Stellt sicher, dass der Zugriff legitim ist
 
 if (!isset($_SESSION['new_user_data'])) {
     header('Location: index.php');
