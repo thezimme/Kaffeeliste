@@ -1,7 +1,6 @@
 <?php
 // buchen.php
-require_once 'config.php';
-session_start();
+require_once 'security_check.php'; // Ersetzt config.php und session_start() und prüft den Zugriff
 
 // Prüfen, ob das Formular gesendet wurde
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
