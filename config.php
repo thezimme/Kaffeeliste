@@ -18,6 +18,12 @@ define('KAFFEE_PREIS', 0.30); // Preis pro Kaffee in Euro
 // Das Passwort hier ist 'dein_sicheres_admin_passwort'
 define('ADMIN_PASSWORD', '$2y$10$fQGJm2W1kT4mcA7jBr0BJeTj2vg/7WwySg3B67xF/EeIJ1bxbgqvW');
 
+// --- NEU: Geheimer Token für den Zugriff auf die Webseite ---
+// Dieser Token muss in der URL übergeben werden, um die Seite nutzen zu können.
+// Beispiel: https://deine-domain.de/kaffeeliste/index.php?token=kaffee-bsi-2025-a7b3c9d1e5f8
+define('ACCESS_TOKEN', 'kaffee-bsi-2025-a7b3c9d1e5f8');
+
+
 // --- Datenbankverbindung herstellen (PDO) ---
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
