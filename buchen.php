@@ -33,12 +33,12 @@ if (!preg_match('/^[A-Z]\s\d{1,2}$/', $reference)) {
 }
 
 
-// 1. Prüfen, ob der Benutzer existiert (jetzt mit Vorname, Nachname UND OE)
+// 1. Prüfen, ob der Benutzer mit der exakten Kombination aus Name und OE existiert
 $stmt = $pdo->prepare("SELECT id FROM users WHERE firstname = ? AND lastname = ? AND oe = ?");
 $stmt->execute([$firstname, $lastname, $reference]);
 $user = $stmt->fetch();
 
-// 2. Fall: Benutzer existiert
+// 2. Fall: Benutzer existiert genau so
 if ($user) {
     $user_id = $user['id'];
     $total_cost = KAFFEE_PREIS * $quantity;
@@ -68,8 +68,7 @@ if ($user) {
     }
 
 } else {
-    // 3. Fall: Benutzer existiert nicht -> Nachfragen
-    // Daten in der Session speichern für die Bestätigungsseite
+    // 3. Fall: Benutzer mit dieser Kombination existiert nicht -> Leite zur Erstellungsseite weiter
     $_SESSION['new_user_data'] = [
         'firstname' => $firstname,
         'lastname' => $lastname,
