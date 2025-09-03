@@ -1,6 +1,8 @@
 <?php
 // user_erstellen.php
-require_once 'security_check.php'; // Ersetzt config.php und session_start() und prüft den Zugriff
+require_once 'config.php';
+session_start();
+require_once 'security_check.php';
 
 // Prüfen, ob Daten für neuen Nutzer in der Session sind
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['new_user_data'])) {
